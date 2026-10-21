@@ -1,223 +1,145 @@
 package net.madty.app
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.app.DownloadManager
+import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.webkit.CookieManager
-import android.webkit.DownloadListener
-import android.webkit.WebChromeClient
-import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.webkit.WebViewAssetLoader
+import androidx.webkit.WebViewClientCompat
 
-class MainActivity : Activity() {
+class MainActivity : ComponentActivity() {
 
     private lateinit var webView: WebView
 
-    // الواجهة المحلية الحالية داخل assets
-    private val homeUrl = "file:///android_asset/assets/index.html"
+    // استخدام المسار الآمن الذي يوفره WebViewAssetLoader
+    private val homeUrl = "https://appassets.androidplatform.net/assets/index.html"
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.statusBarColor = Color.rgb(13, 118, 124)
-        window.navigationBarColor = Color.rgb(13, 118, 124)
-        window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        webView = WebView(this)
+        webView.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
         )
 
-        webView = WebView(this).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            setBackgroundColor(Color.WHITE)
+        // إعداد WebViewAssetLoader لتحميل الملفات المحلية بأمان
+        val assetLoader = WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .build()
 
-            settings.apply {
-                javaScriptEnabled = true
-                domStorageEnabled = true
-                loadsImagesAutomatically = true
-                javaScriptCanOpenWindowsAutomatically = true
-                setSupportMultipleWindows(false)
-                useWideViewPort = true
-                loadWithOverviewMode = true
-                builtInZoomControls = true
-                displayZoomControls = false
-                cacheMode = WebSettings.LOAD_DEFAULT
-
-                // السماح بقراءة ملفات الواجهة المحلية ومواردها.
-                // لا تستخدم هذه الإعدادات لفتح ملفات غير موثوقة.
-                allowFileAccess = true
-                allowContentAccess = true
-                mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+        webView.webViewClient = object : WebViewClientCompat() {
+            override fun shouldInterceptRequest(
+                view: WebView,
+                request: WebResourceRequest
+            ): WebResourceResponse? {
+                return assetLoader.shouldInterceptRequest(request.url)
             }
-        }
 
-        CookieManager.getInstance().apply {
-            setAcceptCookie(true)
-            setAcceptThirdPartyCookies(webView, true)
-        }
-
-        webView.webChromeClient = WebChromeClient()
-
-        webView.webViewClient = object : WebViewClient() {
-
+            // استخدام الدالة الأحدث (غير المهملة)
             override fun shouldOverrideUrlLoading(
                 view: WebView,
                 request: WebResourceRequest
             ): Boolean {
-                return handleNavigation(request.url)
-            }
-
-            @Suppress("DEPRECATION")
-            override fun shouldOverrideUrlLoading(
-                view: WebView,
-                url: String
-            ): Boolean {
-                return handleNavigation(Uri.parse(url))
+                return handleUrl(request.url)
             }
         }
 
-        // تمرير روابط التنزيل إلى تطبيق قادر على فتح الملف أو تنزيله.
-        webView.setDownloadListener(
-            DownloadListener { url, _, _, mimeType, _ ->
-                openDownload(url, mimeType)
-            }
-        )
+        webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            // تعطيل الوصول للملفات المحلية لأنه لم يعد ضرورياً مع WebViewAssetLoader
+            allowFileAccess = false
+            allowContentAccess = false
+            loadWithOverviewMode = true
+            useWideViewPort = true
+            // باقي الإعدادات...
+        }
 
-        setContentView(
-            FrameLayout(this).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
+        // التعامل مع التحميلات باستخدام DownloadManager
+        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, _ ->
+            try {
+                val request = DownloadManager.Request(Uri.parse(url))
+                request.setMimeType(mimetype)
+                request.addRequestHeader("User-Agent", userAgent)
+                request.setDescription("جاري التحميل...")
+                request.setTitle(URLUtil.guessFileName(url, contentDisposition, mimetype))
+                request.allowScanningByMediaScanner()
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                request.setDestinationInExternalPublicDir(
+                    android.os.Environment.DIRECTORY_DOWNLOADS,
+                    URLUtil.guessFileName(url, contentDisposition, mimetype)
                 )
-                addView(webView)
+                val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                dm.enqueue(request)
+                Toast.makeText(applicationContext, "جاري التحميل...", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                Toast.makeText(applicationContext, "فشل التحميل: ${e.message}", Toast.LENGTH_LONG).show()
             }
-        )
+        }
+
+        val container = FrameLayout(this)
+        container.addView(webView)
+        setContentView(container)
 
         if (savedInstanceState == null) {
             webView.loadUrl(homeUrl)
         } else {
-            val restored = webView.restoreState(savedInstanceState)
-            if (restored == null) webView.loadUrl(homeUrl)
+            webView.restoreState(savedInstanceState)
         }
     }
 
-    /**
-     * يبقي صفحات الموقع داخل WebView.
-     * روابط التطبيقات الخارجية مثل الهاتف والبريد تفتح في تطبيقاتها.
-     */
-    private fun handleNavigation(uri: Uri): Boolean {
-        val scheme = uri.scheme.orEmpty().lowercase()
-        val host = uri.host.orEmpty().lowercase()
+    // دالة للتعامل مع الروابط الخارجية
+    private fun handleUrl(uri: Uri): Boolean {
+        val scheme = uri.scheme?.lowercase() ?: ""
+        val host = uri.host?.lowercase() ?: ""
 
+        // الروابط التي تبدأ بـ http أو https وليست من madty.net تفتح في المتصفح
         if (scheme == "http" || scheme == "https") {
-            // موقع madty.net ونطاقاته الفرعية تبقى داخل التطبيق.
-            if (
-                host == "madty.net" ||
-                host == "www.madty.net" ||
-                host.endsWith(".madty.net")
-            ) {
+            if (host == "madty.net" || host == "www.madty.net" || host.endsWith(".madty.net")) {
+                return false // اترك WebView يتعامل معها
+            }
+            // فتح الروابط الخارجية في المتصفح
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+                return true
+            } catch (e: Exception) {
                 return false
             }
-
-            // تبقى روابط الويب الأخرى داخل WebView كذلك، حتى تعمل
-            // التحويلات وروابط الصور وملفات PDF داخل عرض التطبيق.
-            return false
         }
 
-        if (
-            scheme == "tel" ||
-            scheme == "mailto" ||
-            scheme == "sms" ||
-            scheme == "geo"
-        ) {
-            return try {
+        // التعامل مع روابط الاتصال، البريد، الرسائل، إلخ.
+        if (scheme == "tel" || scheme == "mailto" || scheme == "sms" || scheme == "geo") {
+            try {
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
-                true
-            } catch (_: Exception) {
-                Toast.makeText(
-                    this,
-                    "لا يوجد تطبيق مناسب لفتح هذا الرابط",
-                    Toast.LENGTH_SHORT
-                ).show()
-                true
+                return true
+            } catch (e: Exception) {
+                Toast.makeText(this, "لا يوجد تطبيق مناسب لهذا الرابط", Toast.LENGTH_SHORT).show()
+                return true
             }
         }
 
-        if (scheme == "intent") {
-            return try {
-                val intent = Intent.parseUri(uri.toString(), Intent.URI_INTENT_SCHEME)
-                startActivity(intent)
-                true
-            } catch (_: Exception) {
-                Toast.makeText(
-                    this,
-                    "تعذر فتح الرابط",
-                    Toast.LENGTH_SHORT
-                ).show()
-                true
-            }
-        }
-
-        // السماح لـ WebView بمعالجة المخططات الأخرى افتراضيًا.
         return false
     }
 
-    private fun openDownload(url: String, mimeType: String?) {
-        try {
-            val uri = Uri.parse(url)
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, mimeType ?: "*/*")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            startActivity(intent)
-        } catch (_: Exception) {
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-            } catch (_: Exception) {
-                Toast.makeText(
-                    this,
-                    "تعذر فتح رابط التنزيل. تحقق من وجود تطبيق مناسب للملف.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
-        if (::webView.isInitialized) {
-            webView.saveState(outState)
-        }
         super.onSaveInstanceState(outState)
+        webView.saveState(outState)
     }
 
-    @Deprecated("Deprecated in Android API, retained for back navigation")
+    @Deprecated("Deprecated in Android API")
     override fun onBackPressed() {
-        if (::webView.isInitialized && webView.canGoBack()) {
+        if (webView.canGoBack()) {
             webView.goBack()
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onDestroy() {
-        if (::webView.isInitialized) {
-            webView.stopLoading()
-            webView.webChromeClient = null
-            webView.webViewClient = WebViewClient()
-            (webView.parent as? ViewGroup)?.removeView(webView)
-            webView.destroy()
-        }
-        super.onDestroy()
     }
 }
