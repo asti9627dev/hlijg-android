@@ -129,4 +129,5 @@ class MainActivity : Activity() {
         }
 
         if (restored == null) {
-            web
+    webView.loadUrl(homeUrl)
+        }
