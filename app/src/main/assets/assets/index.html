@@ -29,10 +29,9 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* منع تمرير الصفحة بالكامل */
+            overflow: hidden;
         }
 
-        /* حاوية التطبيق الأساسية */
         .app-container {
             width: 100%;
             max-width: 420px;
@@ -44,7 +43,7 @@
             overflow-x: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             border-radius: 20px;
-            padding-bottom: 80px; /* مساحة للشريط السفلي الثابت */
+            padding-bottom: 85px; /* مساحة للشريط السفلي الثابت */
         }
 
         .app-container::-webkit-scrollbar {
@@ -60,7 +59,7 @@
         /* --- الهيدر --- */
         header {
             background: linear-gradient(135deg, #0c7c4d 0%, #129b63 100%);
-            padding: 30px 20px 40px;
+            padding: 25px 20px 35px; /* تصغير الحشوة قليلاً */
             border-bottom-left-radius: 30px;
             border-bottom-right-radius: 30px;
             color: white;
@@ -79,8 +78,8 @@
         }
 
         .icon-btn {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
@@ -92,14 +91,14 @@
         .icon-btn:active { transform: scale(0.9); }
 
         .header-title h1 {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 800;
             text-align: right;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .header-title p {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
         }
 
@@ -108,7 +107,7 @@
             display: flex;
             justify-content: space-between;
             padding: 0 20px;
-            margin-top: -20px;
+            margin-top: -15px;
             gap: 10px;
             position: relative;
             z-index: 2;
@@ -117,8 +116,8 @@
         .stat-card {
             background: white;
             flex: 1;
-            border-radius: 15px;
-            padding: 15px 10px;
+            border-radius: 12px;
+            padding: 12px 8px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: 0.2s;
@@ -127,10 +126,10 @@
         .stat-card:active { transform: scale(0.95); }
 
         .stat-icon {
-            width: 35px;
-            height: 35px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            margin: 0 auto 10px;
+            margin: 0 auto 8px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -141,23 +140,23 @@
         .icon-red { background: #fce8e6; color: #c5221f; }
 
         .stat-card h3 {
-            font-size: 24px;
+            font-size: 20px;
             color: var(--text-dark);
             margin-bottom: 2px;
         }
 
         .stat-card p {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-gray);
             font-weight: 600;
         }
 
         /* --- البانر الأخضر --- */
         .promo-banner {
-            margin: 20px;
+            margin: 15px 20px;
             background-color: var(--dark-green);
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px;
             color: white;
             display: flex;
             justify-content: space-between;
@@ -174,19 +173,19 @@
         }
 
         .promo-text h2 {
-            font-size: 20px;
-            margin-bottom: 5px;
+            font-size: 18px;
+            margin-bottom: 3px;
         }
 
         .promo-text p {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.8;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .promo-icon {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: rgba(255, 255, 255, 0.15);
             border-radius: 50%;
             display: flex;
@@ -197,67 +196,68 @@
         /* --- قسم الفصول الدراسية --- */
         .semesters-section {
             padding: 0 20px;
+            margin-top: 20px;
         }
 
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .section-title {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 22px;
+            gap: 8px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--text-dark);
         }
 
         .section-title::before {
             content: '';
-            width: 5px;
-            height: 24px;
+            width: 4px;
+            height: 22px;
             background-color: var(--primary-green);
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
         .badge {
             background: #e6f4ea;
             color: var(--primary-green);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         /* التبويبات */
         .tabs {
             display: flex;
             background: white;
-            border-radius: 30px;
-            padding: 6px;
-            margin-bottom: 20px;
+            border-radius: 25px;
+            padding: 5px;
+            margin-bottom: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
 
         .tab {
             flex: 1;
             text-align: center;
-            padding: 12px;
-            border-radius: 25px;
-            font-size: 15px;
+            padding: 10px;
+            border-radius: 20px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-dark);
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: 0.3s;
         }
 
@@ -268,8 +268,8 @@
 
         /* أيقونة العلم */
         .flag-icon {
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: #fff;
             display: flex;
@@ -284,18 +284,19 @@
             object-fit: cover;
         }
 
-        /* --- شبكة الصفوف --- */
+        /* --- شبكة الصفوف (تم تصغيرها) --- */
         .grades-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px; /* تصغير المسافة بين المربعات */
+            padding-bottom: 10px;
         }
 
         .grade-card {
             background: white;
-            border-radius: 15px;
-            padding: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border-radius: 12px;
+            padding: 5px; /* تصغير الحشوة الداخلية */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
             transition: 0.2s;
             display: flex;
             flex-direction: column;
@@ -311,25 +312,24 @@
         .grade-box {
             background: #f7f9f8;
             width: 100%;
-            border-radius: 12px;
-            padding: 20px 10px;
+            border-radius: 10px;
+            padding: 8px 5px; /* تصغير الحشوة */
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
         }
 
-        /* الدائرة الخضراء */
+        /* الدائرة الخضراء (تم تصغيرها) */
         .green-circle {
-            width: 90px;
-            height: 90px;
+            width: 65px; /* تصغير القطر */
+            height: 65px;
             background: var(--primary-green);
             border-radius: 50%;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 5px;
             overflow: hidden;
         }
 
@@ -344,13 +344,13 @@
             z-index: 1;
         }
 
-        /* الشريط الوردي فوق الدائرة */
+        /* الشريط الوردي (تم تصغيره) */
         .pink-ribbon {
             background: var(--pink);
             color: white;
-            font-size: 11px;
+            font-size: 9px; /* تصغير الخط */
             font-weight: 700;
-            padding: 4px 0;
+            padding: 2px 0;
             position: absolute;
             bottom: 0;
             width: 100%;
@@ -358,11 +358,12 @@
             z-index: 2;
         }
 
+        /* عنوان الصف أسفل البطاقة */
         .grade-title {
-            font-size: 14px;
+            font-size: 11px; /* تصغير الخط */
             font-weight: 700;
             color: var(--text-dark);
-            margin-top: 10px;
+            margin-top: 6px;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
@@ -377,26 +378,26 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 420px; /* ليتطابق مع عرض التطبيق */
-            height: 75px;
+            max-width: 420px;
+            height: 70px;
             background: white;
             display: flex;
             justify-content: space-around;
             align-items: center;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
-            border-top-left-radius: 25px;
-            border-top-right-radius: 25px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
             z-index: 1000;
-            padding-bottom: env(safe-area-inset-bottom); /* لدعم هواتف الآيفون */
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             color: #555;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
@@ -406,8 +407,8 @@
         .nav-item:active { transform: scale(0.9); }
 
         .nav-item svg {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             fill: none;
             stroke: #555;
             stroke-width: 1.5;
@@ -417,17 +418,17 @@
 
         /* الزر الدائري البارز في المنتصف */
         .nav-center-btn {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             background: white;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            top: -30px;
+            top: -25px;
             box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-            border: 5px solid var(--bg-color);
+            border: 4px solid var(--bg-color);
             cursor: pointer;
             transition: 0.2s;
         }
@@ -435,8 +436,8 @@
         .nav-center-btn:active { transform: scale(0.9); }
 
         .nav-center-btn .inner-circle {
-            width: 52px;
-            height: 52px;
+            width: 48px;
+            height: 48px;
             background: var(--primary-green);
             border-radius: 50%;
             display: flex;
@@ -445,8 +446,8 @@
         }
         
         .nav-center-btn .inner-circle svg {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             stroke: white;
         }
     </style>
@@ -459,10 +460,10 @@
             <div class="header-top">
                 <div class="header-icons">
                     <a href="https://madtiy.net" target="_blank" class="icon-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                     </a>
                     <a href="https://madtiy.net" target="_blank" class="icon-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
                     </a>
                 </div>
                 <div class="header-title">
@@ -476,21 +477,21 @@
         <div class="stats-section">
             <a href="https://madtiy.net" target="_blank" class="stat-card">
                 <div class="stat-icon icon-red">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                 </div>
                 <h3>0</h3>
                 <p>مهامي</p>
             </a>
             <a href="https://madtiy.net" target="_blank" class="stat-card">
                 <div class="stat-icon icon-green">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                 </div>
                 <h3>0</h3>
                 <p>محفوظاتي</p>
             </a>
             <a href="https://madtiy.net" target="_blank" class="stat-card">
                 <div class="stat-icon icon-blue">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 </div>
                 <h3>0</h3>
                 <p>منبهاتي</p>
@@ -500,13 +501,13 @@
         <!-- البانر الأخضر -->
         <a href="https://madtiy.net" target="_blank" class="promo-banner">
             <div class="promo-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.886h6.188l-5.012 3.636 1.912 5.886-5.012-3.636-5.012 3.636 1.912-5.886-5.012-3.636h6.188z"></path></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.886h6.188l-5.012 3.636 1.912 5.886-5.012-3.636-5.012 3.636 1.912-5.886-5.012-3.636h6.188z"></path></svg>
             </div>
             <div class="promo-text">
                 <h2>أدواتي الدراسية</h2>
                 <p>مهام، ملاحظات، جدول، عداد اختبارات<br>ونسبة موزونة</p>
             </div>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </a>
 
         <!-- قسم الفصول الدراسية -->
@@ -514,7 +515,7 @@
             <div class="section-header">
                 <div class="section-title">الفصول الدراسية</div>
                 <div class="badge">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                     2 فصول
                 </div>
             </div>
@@ -580,7 +581,7 @@
             "ثاني ثانوي", "ثالث ثانوي"
         ];
 
-        // دالة توليد البطاقات
+        // دالة توليد البطاقات المصغرة
         function generateGradeCards() {
             const container = document.getElementById('grades-grid');
             let htmlContent = '';
@@ -590,7 +591,7 @@
                     <a href="${targetUrl}" target="_blank" class="grade-card">
                         <div class="grade-box">
                             <div class="green-circle">
-                                <img src="${imgUrl}" alt="${grade}" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\\'font-size:45px; color:white; position:absolute; top:20%;\\'>🧑‍🎓</span>';">
+                                <img src="${imgUrl}" alt="${grade}" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\\'font-size:30px; color:white; position:absolute; top:20%;\\'>🧑‍🎓</span>';">
                                 <div class="pink-ribbon">${grade}</div>
                             </div>
                         </div>
