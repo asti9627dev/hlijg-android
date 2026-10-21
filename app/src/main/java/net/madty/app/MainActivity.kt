@@ -1,42 +1,46 @@
 package net.madty.app
 
 import android.app.Activity
-import android.os.Bundle
-import android.webkit.CookieManager
-import android.webkit.DownloadListener
-import android.webkit.WebChromeClient
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
+import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.webkit.CookieManager
+import android.webkit.DownloadListener
+import android.webkit.URLUtil
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.Toast
-import android.content.Intent
-import android.net.Uri
 
 class MainActivity : Activity() {
 
     private lateinit var webView: WebView
 
-    // الواجهة الرئيسية المحلية داخل التطبيق
+    // الصفحة الرئيسية المحلية داخل التطبيق
     private val homeUrl =
         "file:///android_asset/assets/index.html"
 
-    // نطاق الموقع
+    // رابط موقعك
     private val websiteHost = "madty.net"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.statusBarColor = Color.rgb(13, 118, 77)
-        window.navigationBarColor = Color.rgb(13, 118, 77)
+        window.statusBarColor = Color.rgb(13, 118, 124)
+        window.navigationBarColor = Color.rgb(13, 118, 124)
 
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
 
+        // إنشاء WebView
         webView = WebView(this)
 
         webView.layoutParams = ViewGroup.LayoutParams(
@@ -44,34 +48,46 @@ class MainActivity : Activity() {
             ViewGroup.LayoutParams.MATCH_PARENT
         )
 
+        webView.setBackgroundColor(Color.WHITE)
+
+        // إعدادات عرض الموقع
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
             loadsImagesAutomatically = true
             javaScriptCanOpenWindowsAutomatically = true
             setSupportMultipleWindows(false)
-            allowFileAccess = true
-            allowContentAccess = true
-            builtInZoomControls = false
-            displayZoomControls = false
+
             useWideViewPort = true
             loadWithOverviewMode = true
+
+            builtInZoomControls = true
+            displayZoomControls = false
+
+            cacheMode = WebSettings.LOAD_DEFAULT
+            allowFileAccess = true
+            allowContentAccess = true
+
+            mixedContentMode =
+                WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
         }
 
-        CookieManager.getInstance().setAcceptCookie(true)
+        // تفعيل ملفات تعريف الارتباط
+        CookieManager.getInstance().apply {
+            setAcceptCookie(true)
+            setAcceptThirdPartyCookies(webView, true)
+        }
 
-        CookieManager.getInstance()
-            .setAcceptThirdPartyCookies(webView, true)
-
+        // إدارة النوافذ المنبثقة
         webView.webChromeClient = WebChromeClient()
 
+        // إدارة فتح الروابط
         webView.webViewClient = object : WebViewClient() {
 
             override fun shouldOverrideUrlLoading(
                 view: WebView,
                 request: WebResourceRequest
             ): Boolean {
-
                 return handleUrl(request.url)
             }
 
@@ -80,78 +96,54 @@ class MainActivity : Activity() {
                 view: WebView,
                 url: String
             ): Boolean {
-
                 return handleUrl(Uri.parse(url))
-            }
-
-            override fun onReceivedError(
-                view: WebView,
-                request: WebResourceRequest,
-                error: android.webkit.WebResourceError
-            ) {
-                super.onReceivedError(view, request, error)
-
-                if (request.isForMainFrame) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "تعذر تحميل الصفحة. تحقق من اتصال الإنترنت.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
             }
         }
 
-        // فتح روابط التنزيل
+        // التعامل مع التنزيلات
         webView.setDownloadListener(
-            DownloadListener { url, _, _, _, _ ->
-                try {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(url)
-                    )
-                    startActivity(intent)
-                } catch (_: Exception) {
-                    Toast.makeText(
-                        this,
-                        "تعذر فتح رابط التنزيل",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        )
-
-        setContentView(
-            FrameLayout(this).apply {
-                addView(
-                    webView,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    )
+            DownloadListener { url, _, contentDisposition, mimeType, _ ->
+                openDownload(
+                    url,
+                    mimeType,
+                    contentDisposition
                 )
             }
         )
 
-        if (savedInstanceState == null) {
-            webView.loadUrl(homeUrl)
-        } else {
+        // إضافة WebView إلى الشاشة
+        val container = FrameLayout(this)
+
+        container.addView(
+            webView,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+        setContentView(container)
+
+        // استعادة الصفحة السابقة عند الإمكان
+        if (savedInstanceState != null) {
             val restored = webView.restoreState(savedInstanceState)
 
             if (restored == null) {
                 webView.loadUrl(homeUrl)
             }
+        } else {
+            webView.loadUrl(homeUrl)
         }
     }
 
+    /**
+     * تحديد طريقة فتح الرابط:
+     * روابط الموقع داخليًا، والروابط الخارجية بالتطبيق المناسب.
+     */
     private fun handleUrl(uri: Uri): Boolean {
 
         val scheme = uri.scheme.orEmpty().lowercase()
         val host = uri.host.orEmpty().lowercase()
-
-        // السماح بفتح الواجهة المحلية ومواردها
-        if (scheme == "file") {
-            return false
-        }
 
         // إبقاء صفحات الموقع داخل التطبيق
         if (
@@ -165,11 +157,49 @@ class MainActivity : Activity() {
             return false
         }
 
-        // فتح الروابط الخارجية في المتصفح
+        // فتح روابط الهاتف والبريد والرسائل
+        if (
+            scheme == "tel" ||
+            scheme == "mailto" ||
+            scheme == "sms" ||
+            scheme == "smsto" ||
+            scheme == "geo"
+        ) {
+            return openExternalUri(uri)
+        }
+
+        // فتح روابط التطبيقات الخارجية
+        if (
+            scheme == "intent" ||
+            scheme == "market" ||
+            scheme == "whatsapp"
+        ) {
+            return openExternalUri(uri)
+        }
+
+        // الروابط الخارجية تفتح في التطبيق المناسب
+        if (scheme == "https" || scheme == "http") {
+            return openExternalUri(uri)
+        }
+
+        // منع المخططات غير المعروفة
+        return true
+    }
+
+    /**
+     * فتح الرابط باستخدام تطبيق مناسب على الجهاز.
+     */
+    private fun openExternalUri(uri: Uri): Boolean {
         return try {
-            startActivity(
-                Intent(Intent.ACTION_VIEW, uri)
-            )
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+            true
+        } catch (_: ActivityNotFoundException) {
+            Toast.makeText(
+                this,
+                "لا يوجد تطبيق مناسب لفتح هذا الرابط",
+                Toast.LENGTH_SHORT
+            ).show()
             true
         } catch (_: Exception) {
             Toast.makeText(
@@ -181,25 +211,60 @@ class MainActivity : Activity() {
         }
     }
 
+    /**
+     * فتح الملفات التي يطلب الموقع تنزيلها.
+     */
+    private fun openDownload(
+        url: String,
+        mimeType: String?,
+        contentDisposition: String?
+    ) {
+        try {
+            val uri = Uri.parse(url)
+
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(
+                    uri,
+                    mimeType ?: "*/*"
+                )
+
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
+            startActivity(intent)
+
+        } catch (_: Exception) {
+
+            try {
+                val intent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(url)
+                )
+
+                startActivity(intent)
+
+            } catch (_: Exception) {
+
+                Toast.makeText(
+                    this,
+                    "تعذر فتح رابط التنزيل. حاول فتحه من المتصفح.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    /**
+     * حفظ حالة الصفحة عند الحاجة.
+     */
     override fun onSaveInstanceState(outState: Bundle) {
-        webView.saveState(outState)
+        if (::webView.isInitialized) {
+            webView.saveState(outState)
+        }
+
         super.onSaveInstanceState(outState)
     }
 
-    @Deprecated("Deprecated in Android API")
-    override fun onBackPressed() {
-        if (::webView.isInitialized && webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            super.onBackPressed()
-        }
-    }
-
-    override fun onDestroy() {
-        if (::webView.isInitialized) {
-            webView.stopLoading()
-            webView.destroy()
-        }
-        super.onDestroy()
-    }
-}
+    /**
+     * زر الرجوع:
+     * يرجع إلى الصفحة
