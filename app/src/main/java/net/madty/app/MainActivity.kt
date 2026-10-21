@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.CookieManager
 import android.webkit.DownloadListener
-import android.webkit.URLUtil
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -27,7 +26,7 @@ class MainActivity : Activity() {
     private val homeUrl =
         "file:///android_asset/assets/index.html"
 
-    // رابط موقعك
+    // نطاق الموقع
     private val websiteHost = "madty.net"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,17 +39,17 @@ class MainActivity : Activity() {
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
 
-        // إنشاء WebView
+        // إنشاء نافذة عرض الموقع
         webView = WebView(this)
+
+        webView.setBackgroundColor(Color.WHITE)
 
         webView.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
 
-        webView.setBackgroundColor(Color.WHITE)
-
-        // إعدادات عرض الموقع
+        // إعدادات WebView
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -78,10 +77,9 @@ class MainActivity : Activity() {
             setAcceptThirdPartyCookies(webView, true)
         }
 
-        // إدارة النوافذ المنبثقة
         webView.webChromeClient = WebChromeClient()
 
-        // إدارة فتح الروابط
+        // التحكم في التنقل بين الصفحات
         webView.webViewClient = object : WebViewClient() {
 
             override fun shouldOverrideUrlLoading(
@@ -100,18 +98,14 @@ class MainActivity : Activity() {
             }
         }
 
-        // التعامل مع التنزيلات
+        // التعامل مع روابط تنزيل الملفات
         webView.setDownloadListener(
-            DownloadListener { url, _, contentDisposition, mimeType, _ ->
-                openDownload(
-                    url,
-                    mimeType,
-                    contentDisposition
-                )
+            DownloadListener { url, _, _, mimeType, _ ->
+                openDownload(url, mimeType)
             }
         )
 
-        // إضافة WebView إلى الشاشة
+        // عرض WebView داخل التطبيق
         val container = FrameLayout(this)
 
         container.addView(
@@ -124,28 +118,25 @@ class MainActivity : Activity() {
 
         setContentView(container)
 
-        // استعادة الصفحة السابقة عند الإمكان
-        if (savedInstanceState != null) {
-            val restored = webView.restoreState(savedInstanceState)
-
-            if (restored == null) {
-                webView.loadUrl(homeUrl)
-            }
+        // تحميل الصفحة الرئيسية أو استعادة الصفحة السابقة
+        val restored = if (savedInstanceState != null) {
+            webView.restoreState(savedInstanceState)
         } else {
+            null
+        }
+
+        if (restored == null) {
             webView.loadUrl(homeUrl)
         }
     }
 
-    /**
-     * تحديد طريقة فتح الرابط:
-     * روابط الموقع داخليًا، والروابط الخارجية بالتطبيق المناسب.
-     */
+    // تحديد طريقة فتح الروابط
     private fun handleUrl(uri: Uri): Boolean {
 
         val scheme = uri.scheme.orEmpty().lowercase()
         val host = uri.host.orEmpty().lowercase()
 
-        // إبقاء صفحات الموقع داخل التطبيق
+        // صفحات موقع madty.net تفتح داخل التطبيق
         if (
             (scheme == "https" || scheme == "http") &&
             (
@@ -157,7 +148,7 @@ class MainActivity : Activity() {
             return false
         }
 
-        // فتح روابط الهاتف والبريد والرسائل
+        // روابط الهاتف والبريد والرسائل والموقع الجغرافي
         if (
             scheme == "tel" ||
             scheme == "mailto" ||
@@ -168,7 +159,7 @@ class MainActivity : Activity() {
             return openExternalUri(uri)
         }
 
-        // فتح روابط التطبيقات الخارجية
+        // روابط التطبيقات الخارجية
         if (
             scheme == "intent" ||
             scheme == "market" ||
@@ -182,53 +173,51 @@ class MainActivity : Activity() {
             return openExternalUri(uri)
         }
 
-        // منع المخططات غير المعروفة
+        // تجاهل المخططات غير المدعومة
         return true
     }
 
-    /**
-     * فتح الرابط باستخدام تطبيق مناسب على الجهاز.
-     */
+    // فتح الروابط الخارجية
     private fun openExternalUri(uri: Uri): Boolean {
+
         return try {
             val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(intent)
             true
+
         } catch (_: ActivityNotFoundException) {
+
             Toast.makeText(
                 this,
                 "لا يوجد تطبيق مناسب لفتح هذا الرابط",
                 Toast.LENGTH_SHORT
             ).show()
+
             true
+
         } catch (_: Exception) {
+
             Toast.makeText(
                 this,
                 "تعذر فتح الرابط",
                 Toast.LENGTH_SHORT
             ).show()
+
             true
         }
     }
 
-    /**
-     * فتح الملفات التي يطلب الموقع تنزيلها.
-     */
+    // فتح روابط تنزيل الملفات
     private fun openDownload(
         url: String,
-        mimeType: String?,
-        contentDisposition: String?
+        mimeType: String?
     ) {
+
         try {
             val uri = Uri.parse(url)
 
             val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(
-                    uri,
-                    mimeType ?: "*/*"
-                )
-
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                setDataAndType(uri, mimeType ?: "*/*")
             }
 
             startActivity(intent)
@@ -236,28 +225,27 @@ class MainActivity : Activity() {
         } catch (_: Exception) {
 
             try {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(url)
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(url)
+                    )
                 )
-
-                startActivity(intent)
 
             } catch (_: Exception) {
 
                 Toast.makeText(
                     this,
-                    "تعذر فتح رابط التنزيل. حاول فتحه من المتصفح.",
+                    "تعذر فتح الملف. حاول تنزيله من المتصفح.",
                     Toast.LENGTH_LONG
                 ).show()
             }
         }
     }
 
-    /**
-     * حفظ حالة الصفحة عند الحاجة.
-     */
+    // حفظ حالة الصفحة
     override fun onSaveInstanceState(outState: Bundle) {
+
         if (::webView.isInitialized) {
             webView.saveState(outState)
         }
@@ -265,6 +253,33 @@ class MainActivity : Activity() {
         super.onSaveInstanceState(outState)
     }
 
-    /**
-     * زر الرجوع:
-     * يرجع إلى الصفحة
+    // الرجوع إلى الصفحة السابقة
+    @Deprecated("Deprecated in Android API")
+    override fun onBackPressed() {
+
+        if (
+            ::webView.isInitialized &&
+            webView.canGoBack()
+        ) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    // تحرير موارد WebView
+    override fun onDestroy() {
+
+        if (::webView.isInitialized) {
+            webView.stopLoading()
+            webView.webChromeClient = null
+            webView.webViewClient = null
+
+            (webView.parent as? ViewGroup)?.removeView(webView)
+
+            webView.destroy()
+        }
+
+        super.onDestroy()
+    }
+}
