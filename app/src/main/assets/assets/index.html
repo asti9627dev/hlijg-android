@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>واجهة التطبيق الدراسي - مع التصنيفات</title>
+    <title>منهجي - الواجهة الرئيسية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-green: #0c7c4d;
             --dark-green: #065c37;
-            --bg-color: #f5f9f7;
+            --bg-color: #f4f9f6;
             --text-dark: #333;
             --text-gray: #7a7a7a;
             --pink: #e84a8a;
@@ -44,8 +44,15 @@
             padding-bottom: 80px;
         }
 
+        /* إخفاء شريط التمرير */
         .app-container::-webkit-scrollbar {
             display: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         /* --- الهيدر --- */
@@ -79,7 +86,10 @@
             justify-content: center;
             align-items: center;
             font-size: 18px;
+            transition: 0.2s;
         }
+        
+        .icon-btn:active { transform: scale(0.9); }
 
         .header-title h1 {
             font-size: 24px;
@@ -110,7 +120,10 @@
             padding: 15px 10px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: 0.2s;
         }
+        
+        .stat-card:active { transform: scale(0.95); }
 
         .stat-icon {
             width: 35px;
@@ -149,7 +162,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: 0.2s;
         }
+        
+        .promo-banner:active { transform: scale(0.98); }
 
         .promo-text h2 {
             font-size: 18px;
@@ -172,10 +188,9 @@
             align-items: center;
         }
 
-        /* --- قسم التصنيفات (جديد) --- */
-        .categories-section {
+        /* --- قسم الفصول الدراسية --- */
+        .semesters-section {
             padding: 0 20px;
-            margin-bottom: 20px;
         }
 
         .section-header {
@@ -189,7 +204,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--text-dark);
         }
@@ -197,63 +212,9 @@
         .section-title::before {
             content: '';
             width: 4px;
-            height: 20px;
+            height: 24px;
             background-color: var(--primary-green);
             border-radius: 4px;
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .category-card {
-            background: white;
-            border-radius: 15px;
-            padding: 15px 10px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-decoration: none;
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s;
-        }
-
-        .category-card:active {
-            transform: scale(0.95);
-        }
-
-        .category-icon-wrapper {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .cat-primary { background: #e6f4ea; color: var(--primary-green); }
-        .cat-middle { background: #e8f0fe; color: var(--blue-accent); }
-        .cat-high { background: #fce8e6; color: #c5221f; }
-
-        .category-card h4 {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .category-card span {
-            font-size: 10px;
-            color: var(--text-gray);
-            margin-top: 2px;
-        }
-
-        /* --- قسم الفصول الدراسية --- */
-        .semesters-section {
-            padding: 0 20px;
         }
 
         .badge {
@@ -261,7 +222,7 @@
             color: var(--primary-green);
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -290,6 +251,7 @@
             justify-content: center;
             align-items: center;
             gap: 8px;
+            transition: 0.3s;
         }
 
         .tab.active {
@@ -304,55 +266,89 @@
             object-fit: cover;
         }
 
+        /* --- شبكة الصفوف --- */
         .grades-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
         }
 
         .grade-card {
             background: white;
             border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #f0f0f0;
         }
 
-        .grade-img-container {
+        .grade-card:active {
+            transform: scale(0.95);
+        }
+
+        /* المربع الرمادي الفاتح داخ البطاقة */
+        .grade-box {
+            background: #f7f9f8;
+            width: 100%;
+            border-radius: 12px;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* الدائرة الخضراء */
+        .green-circle {
+            width: 85px;
+            height: 85px;
             background: var(--primary-green);
-            width: 100px;
-            height: 100px;
             border-radius: 50%;
-            margin: 0 auto 15px;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-bottom: 10px;
             overflow: hidden;
         }
 
-        .grade-img-container::after {
-            content: '🧑‍🎓';
-            font-size: 50px;
+        /* الصورة داخل الدائرة */
+        .green-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
-        .grade-label {
+        /* الشريط الوردي فوق الدائرة */
+        .pink-ribbon {
             background: var(--pink);
             color: white;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
-            padding: 5px 10px;
+            padding: 3px 8px;
             position: absolute;
             bottom: 0;
             width: 100%;
             text-align: center;
+            z-index: 2;
         }
 
         .grade-title {
             font-size: 13px;
             font-weight: 700;
             color: var(--text-dark);
-            margin-top: 10px;
+            margin-top: 8px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
 
         /* --- شريط التنقل السفلي --- */
@@ -361,7 +357,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 70px;
+            height: 65px;
             background: white;
             display: flex;
             justify-content: space-around;
@@ -369,25 +365,33 @@
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
+            z-index: 10;
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
-            color: var(--text-gray);
+            gap: 2px;
+            color: var(--text-dark);
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
+            width: 60px;
         }
+        
+        .nav-item:active { transform: scale(0.9); }
 
         .nav-item svg {
             width: 22px;
             height: 22px;
-            fill: currentColor;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
         }
 
+        /* الزر الدائري في منتصف الشريط */
         .nav-center-btn {
             width: 65px;
             height: 65px;
@@ -400,7 +404,11 @@
             top: -25px;
             box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
             border: 4px solid var(--bg-color);
+            cursor: pointer;
+            transition: 0.2s;
         }
+        
+        .nav-center-btn:active { transform: scale(0.9); }
 
         .nav-center-btn .inner-circle {
             width: 50px;
@@ -413,7 +421,12 @@
             color: white;
             font-size: 24px;
         }
-
+        
+        .nav-center-btn .inner-circle svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+        }
     </style>
 </head>
 <body>
@@ -423,12 +436,12 @@
         <header>
             <div class="header-top">
                 <div class="header-icons">
-                    <div class="icon-btn">
+                    <a href="https://madtiy.net" target="_blank" class="icon-btn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                    </div>
-                    <div class="icon-btn">
+                    </a>
+                    <a href="https://madtiy.net" target="_blank" class="icon-btn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                    </div>
+                    </a>
                 </div>
                 <div class="header-title">
                     <h1>مساء الخير</h1>
@@ -439,31 +452,31 @@
 
         <!-- كروت الإحصائيات -->
         <div class="stats-section">
-            <div class="stat-card">
+            <a href="https://madtiy.net" target="_blank" class="stat-card">
                 <div class="stat-icon icon-red">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                 </div>
                 <h3>0</h3>
                 <p>مهامي</p>
-            </div>
-            <div class="stat-card">
+            </a>
+            <a href="https://madtiy.net" target="_blank" class="stat-card">
                 <div class="stat-icon icon-green">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                 </div>
                 <h3>0</h3>
                 <p>محفوظاتي</p>
-            </div>
-            <div class="stat-card">
+            </a>
+            <a href="https://madtiy.net" target="_blank" class="stat-card">
                 <div class="stat-icon icon-blue">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 </div>
                 <h3>0</h3>
                 <p>منبهاتي</p>
-            </div>
+            </a>
         </div>
 
         <!-- البانر الأخضر -->
-        <div class="promo-banner">
+        <a href="https://madtiy.net" target="_blank" class="promo-banner">
             <div class="promo-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.886h6.188l-5.012 3.636 1.912 5.886-5.012-3.636-5.012 3.636 1.912-5.886-5.012-3.636h6.188z"></path></svg>
             </div>
@@ -472,47 +485,7 @@
                 <p>مهام، ملاحظات، جدول، عداد اختبارات<br>ونسبة موزونة</p>
             </div>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </div>
-
-        <!-- قسم التصنيفات (جديد) -->
-        <div class="categories-section">
-            <div class="section-header">
-                <div class="section-title">التصنيفات</div>
-                <div class="badge">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                    3 مراحل
-                </div>
-            </div>
-
-            <div class="categories-grid">
-                <!-- المرحلة الابتدائية -->
-                <a href="https://www.madty.net" target="_blank" class="category-card">
-                    <div class="category-icon-wrapper cat-primary">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                    </div>
-                    <h4>المرحلة الابتدائية</h4>
-                    <span>ابتدائي</span>
-                </a>
-
-                <!-- المرحلة المتوسطة -->
-                <a href="https://www.madty.net" target="_blank" class="category-card">
-                    <div class="category-icon-wrapper cat-middle">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                    </div>
-                    <h4>المرحلة المتوسطة</h4>
-                    <span>متوسط</span>
-                </a>
-
-                <!-- المرحلة الثانوية -->
-                <a href="https://www.madty.net" target="_blank" class="category-card">
-                    <div class="category-icon-wrapper cat-high">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-                    </div>
-                    <h4>المرحلة الثانوية</h4>
-                    <span>ثانوي</span>
-                </a>
-            </div>
-        </div>
+        </a>
 
         <!-- قسم الفصول الدراسية -->
         <div class="semesters-section">
@@ -524,60 +497,111 @@
                 </div>
             </div>
 
+            <!-- أزرار التبويب -->
             <div class="tabs">
-                <div class="tab active">
+                <div class="tab active" id="tab1" onclick="switchSemester(1)">
                     الفصل الاول
                     <img src="https://flagcdn.com/w20/sa.png" alt="SA">
                 </div>
-                <div class="tab">
+                <div class="tab" id="tab2" onclick="switchSemester(2)">
                     الفصل الثاني
                     <img src="https://flagcdn.com/w20/sa.png" alt="SA">
                 </div>
             </div>
 
-            <div class="grades-grid">
-                <div class="grade-card">
-                    <div class="grade-img-container">
-                        <div class="grade-label">اول ابتدائي</div>
-                    </div>
-                    <div class="grade-title">الصف الاول الابتدائي</div>
-                </div>
-                <div class="grade-card">
-                    <div class="grade-img-container">
-                        <div class="grade-label">ثاني ابتدائي</div>
-                    </div>
-                    <div class="grade-title">الصف الثاني الابتدائي</div>
-                </div>
+            <!-- شبكة الصفوف (يتم تعبئتها بالجافاسكريبت) -->
+            <div class="grades-grid" id="grades-grid">
+                <!-- سيتم وضع البطاقات هنا تلقائياً -->
             </div>
         </div>
 
         <!-- شريط التنقل السفلي -->
         <nav class="bottom-nav">
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            <a href="https://madtiy.net" target="_blank" class="nav-item">
+                <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 المزيد
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            </a>
+            <a href="https://madtiy.net" target="_blank" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 التنزيلات
-            </div>
+            </a>
             
-            <div class="nav-center-btn">
+            <a href="https://madtiy.net" target="_blank" class="nav-center-btn">
                 <div class="inner-circle">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                 </div>
-            </div>
+            </a>
 
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            <a href="https://madtiy.net" target="_blank" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                 المفضلة
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="12 6 12 12 16 14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            </a>
+            <a href="https://madtiy.net" target="_blank" class="nav-item">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2"></path><path d="M5 3L2 6"></path><path d="M19 3l3 3"></path></svg>
                 المنبه
-            </div>
+            </a>
         </nav>
     </div>
 
+    <!-- سكربت لتوليد الصفوف والتبديل بين الفصول -->
+    <script>
+        // الرابط الخاص بالصورة الذي طلبته
+        const imgUrl = "https://www.mnhaje.com/wp-content/uploads/2026/10/ثاني-ابتدائي-الفصل-الدراسي-الثاني-ف2-موقع-منهجي.jpg";
+        const targetUrl = "https://madtiy.net";
+
+        // أسماء الصفوف الـ 12
+        const gradesList = [
+            "اول ابتدائي", "ثاني ابتدائي", 
+            "ثالث ابتدائي", "رابع ابتدائي", 
+            "خامس ابتدائي", "سادس ابتدائي",
+            "اول متوسط", "ثاني متوسط", 
+            "ثالث متوسط", "أول ثانوي", 
+            "ثاني ثانوي", "ثالث ثانوي"
+        ];
+
+        // دالة لإنشاء بطاقات الصفوف
+        function generateGradeCards() {
+            const container = document.getElementById('grades-grid');
+            let htmlContent = '';
+
+            gradesList.forEach(grade => {
+                htmlContent += `
+                    <a href="${targetUrl}" target="_blank" class="grade-card">
+                        <div class="grade-box">
+                            <div class="green-circle">
+                                <!-- الصورة -->
+                                <img src="${imgUrl}" alt="${grade}" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\\'font-size:40px; color:white;\\'>🧑‍🎓</span>';">
+                                <!-- الشريط الوردي -->
+                                <div class="pink-ribbon">${grade}</div>
+                            </div>
+                        </div>
+                        <div class="grade-title">الصف ${grade}...</div>
+                    </a>
+                `;
+            });
+
+            container.innerHTML = htmlContent;
+        }
+
+        // دالة التبديل بين الفصول (تغيير لون التبويب)
+        function switchSemester(semesterNumber) {
+            const tab1 = document.getElementById('tab1');
+            const tab2 = document.getElementById('tab2');
+
+            if (semesterNumber === 1) {
+                tab1.classList.add('active');
+                tab2.classList.remove('active');
+            } else {
+                tab2.classList.add('active');
+                tab1.classList.remove('active');
+            }
+            // هنا يمكنك مستقبلاً إضافة كود لتغيير محتوى الصفوف بناءً على الفصل
+        }
+
+        // تشغيل دالة توليد الصفوف عند تحميل الصفحة
+        window.onload = function() {
+            generateGradeCards();
+        };
+    </script>
 </body>
 </html>
