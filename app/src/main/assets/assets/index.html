@@ -1,651 +1,223 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منهجي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-green: #0d7c4a;
-            --dark-green: #065c37;
-            --bg-color: #f4f9f6;
-            --text-dark: #333;
-            --text-gray: #7a7a7a;
-            --pink: #e84a8a;
-            --blue-accent: #1967d2;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        body {
-            background-color: #e0e0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 420px;
-            height: 100%;
-            max-height: 850px;
-            background-color: var(--bg-color);
-            position: relative;
-            overflow-y: auto;
-            overflow-x: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border-radius: 20px;
-            padding-bottom: 85px;
-        }
-
-        .app-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        /* =========================================
-           ✨ تصميم الهيدر (الخلفية والتأثيرات) ✨
-           ========================================= */
-        header {
-            background: linear-gradient(135deg, #0b7a44 0%, #129b63 100%);
-            padding: 40px 20px 45px;
-            border-bottom-left-radius: 35px;
-            border-bottom-right-radius: 35px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .circle-1 { width: 350px; height: 350px; background: rgba(255, 255, 255, 0.04); top: -100px; right: -80px; }
-        .circle-2 { width: 280px; height: 280px; background: rgba(255, 255, 255, 0.05); bottom: -120px; right: 10px; }
-        .circle-3 { width: 150px; height: 150px; background: rgba(255, 255, 255, 0.08); top: 25px; left: 50px; }
-        .circle-4 { width: 90px; height: 90px; background: rgba(0, 0, 0, 0.1); top: 40px; left: 85px; }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            position: relative;
-            z-index: 10;
-        }
-
-        .header-icons {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-top: 5px;
-        }
-
-        .icon-btn {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.2s;
-        }
-        
-        .icon-btn:active { transform: scale(0.9); }
-
-        .header-title {
-            text-align: right;
-        }
-
-        .header-title h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            letter-spacing: -0.5px;
-        }
-
-        .header-title p {
-            font-size: 15px;
-            opacity: 0.95;
-            font-weight: 600;
-        }
-
-        /* --- قسم الإحصائيات --- */
-        .stats-section {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            margin-top: -15px;
-            gap: 10px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .stat-card {
-            background: white;
-            flex: 1;
-            border-radius: 12px;
-            padding: 12px 8px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: 0.2s;
-        }
-        
-        .stat-card:active { transform: scale(0.95); }
-
-        .stat-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin: 0 auto 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .icon-blue { background: #e8f0fe; color: #1967d2; }
-        .icon-green { background: #e6f4ea; color: #137333; }
-        .icon-red { background: #fce8e6; color: #c5221f; }
-
-        .stat-card h3 { font-size: 20px; color: var(--text-dark); margin-bottom: 2px; }
-        .stat-card p { font-size: 12px; color: var(--text-gray); font-weight: 600; }
-
-        /* =========================================
-           ✨ البانر الأخضر (أدواتي الدراسية) ✨
-           ========================================= */
-        .promo-banner {
-            margin: 15px 20px;
-            /* استخدام تدرج لوني داكناً ليطابق الصورة */
-            background: linear-gradient(135deg, #064325 0%, #0a6438 100%);
-            border-radius: 20px; /* حواف أكثر استدارة */
-            padding: 22px 20px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.2s;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-        }
-        
-        .promo-banner:active { transform: scale(0.98); }
-
-        .promo-icon {
-            width: 55px;
-            height: 55px;
-            background: rgba(255, 255, 255, 0.1); /* خلفية شفافة للأيقونة */
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .promo-text {
-            text-align: center;
-            flex: 1;
-            padding: 0 10px;
-        }
-
-        .promo-text h2 {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-
-        .promo-text p {
-            font-size: 14px;
-            opacity: 0.9;
-            line-height: 1.6;
-            font-weight: 600;
-        }
-
-        .promo-arrow {
-            opacity: 0.9;
-        }
-        /* ========================================= */
-
-        /* --- قسم الفصول الدراسية --- */
-        .semesters-section {
-            padding: 0 20px;
-            margin-top: 20px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--text-dark);
-        }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 22px;
-            background-color: var(--primary-green);
-            border-radius: 4px;
-        }
-
-        .badge {
-            background: #e6f4ea;
-            color: var(--primary-green);
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* التبويبات */
-        .tabs {
-            display: flex;
-            background: white;
-            border-radius: 25px;
-            padding: 5px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-dark);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            transition: 0.3s;
-        }
-
-        .tab.active {
-            background-color: var(--primary-green);
-            color: white;
-        }
-
-        .flag-icon {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        
-        .flag-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* --- شبكة الصفوف --- */
-        .grades-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding-bottom: 10px;
-        }
-
-        .grade-card {
-            background: white;
-            border-radius: 12px;
-            padding: 5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            transition: 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 1px solid #f0f0f0;
-        }
-
-        .grade-card:active { transform: scale(0.95); }
-
-        .grade-box {
-            background: #f7f9f8;
-            width: 100%;
-            border-radius: 10px;
-            padding: 8px 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        .green-circle {
-            width: 65px;
-            height: 65px;
-            background: var(--primary-green);
-            border-radius: 50%;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .green-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        .pink-ribbon {
-            background: var(--pink);
-            color: white;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 0;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 2;
-        }
-
-        .grade-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-top: 6px;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
-
-        /* --- شريط التنقل السفلي الثابت --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 420px;
-            height: 70px;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            z-index: 1000;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            color: #555;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 60px;
-        }
-        
-        .nav-item:active { transform: scale(0.9); }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            fill: none;
-            stroke: #555;
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .nav-center-btn {
-            width: 65px;
-            height: 65px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            top: -25px;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-            border: 4px solid var(--bg-color);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        
-        .nav-center-btn:active { transform: scale(0.9); }
-
-        .nav-center-btn .inner-circle {
-            width: 48px;
-            height: 48px;
-            background: var(--primary-green);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .nav-center-btn .inner-circle svg {
-            width: 24px;
-            height: 24px;
-            stroke: white;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="app-container">
-        
-        <!-- الهيدر -->
-        <header>
-            <div class="bg-circle circle-1"></div>
-            <div class="bg-circle circle-2"></div>
-            <div class="bg-circle circle-3"></div>
-            <div class="bg-circle circle-4"></div>
-
-            <div class="header-top">
-                <div class="header-icons">
-                    <a href="https://madtiy.net" target="_blank" class="icon-btn">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                    </a>
-                    <a href="https://madtiy.net" target="_blank" class="icon-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                    </a>
-                </div>
-                
-                <div class="header-title">
-                    <h1>مساء الخير</h1> 
-                    <p>الأربعاء، 21 أكتوبر 2026</p>
-                </div>
-            </div>
-        </header>
-
-        <!-- كروت الإحصائيات -->
-        <div class="stats-section">
-            <a href="https://madtiy.net" target="_blank" class="stat-card">
-                <div class="stat-icon icon-red">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                </div>
-                <h3>0</h3>
-                <p>مهامي</p>
-            </a>
-            <a href="https://madtiy.net" target="_blank" class="stat-card">
-                <div class="stat-icon icon-green">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                </div>
-                <h3>0</h3>
-                <p>محفوظاتي</p>
-            </a>
-            <a href="https://madtiy.net" target="_blank" class="stat-card">
-                <div class="stat-icon icon-blue">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                </div>
-                <h3>0</h3>
-                <p>منبهاتي</p>
-            </a>
-        </div>
-
-        <!-- ✨ البانر المحدث (أدواتي الدراسية) ✨ -->
-        <a href="https://madtiy.net" target="_blank" class="promo-banner">
-            
-            <!-- الأيقونة (في اليمين) -->
-            <div class="promo-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 2L11.5 7.5L17 9L11.5 10.5L10 16L8.5 10.5L3 9L8.5 7.5L10 2Z"/>
-                    <path d="M18 13L18.75 15.25L21 16L18.75 16.75L18 19L17.25 16.75L15 16L17.25 15.25L18 13Z"/>
-                    <path d="M17 3L17.5 4.5L19 5L17.5 5.5L17 7L16.5 5.5L15 5L16.5 4.5L17 3Z"/>
-                </svg>
-            </div>
-            
-            <!-- النص (في المنتصف) -->
-            <div class="promo-text">
-                <h2>أدواتي الدراسية</h2>
-                <p>مهام، ملاحظات، جدول، عداد اختبارات<br>ونسبة موزونة</p>
-            </div>
-            
-            <!-- السهم (في اليسار) -->
-            <svg class="promo-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-
-        </a>
-
-        <!-- قسم الفصول الدراسية -->
-        <div class="semesters-section">
-            <div class="section-header">
-                <div class="section-title">الفصول الدراسية</div>
-                <div class="badge">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                    2 فصول
-                </div>
-            </div>
-
-            <div class="tabs">
-                <div class="tab active" id="tab1" onclick="switchSemester(1)">
-                    <div class="flag-icon"><img src="https://flagcdn.com/w40/sa.png" alt="SA"></div>
-                    الفصل الاول
-                </div>
-                <div class="tab" id="tab2" onclick="switchSemester(2)">
-                    <div class="flag-icon"><img src="https://flagcdn.com/w40/sa.png" alt="SA"></div>
-                    الفصل الثاني
-                </div>
-            </div>
-
-            <div class="grades-grid" id="grades-grid">
-                <!-- سيتم تعبئتها بالجافاسكريبت -->
-            </div>
-        </div>
-    </div>
-
-    <!-- شريط التنقل السفلي الثابت -->
-    <nav class="bottom-nav">
-        <a href="https://madtiy.net" target="_blank" class="nav-item">
-            <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            المزيد
-        </a>
-        <a href="https://madtiy.net" target="_blank" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            التنزيلات
-        </a>
-        
-        <a href="https://madtiy.net" target="_blank" class="nav-center-btn">
-            <div class="inner-circle">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-            </div>
-        </a>
-
-        <a href="https://madtiy.net" target="_blank" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-            المفضلة
-        </a>
-        <a href="https://madtiy.net" target="_blank" class="nav-item">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2"></path><path d="M5 3L2 6"></path><path d="M19 3l3 3"></path></svg>
-            المنبه
-        </a>
-    </nav>
-
-    <script>
-        const imgUrl = "https://www.mnhaje.com/wp-content/uploads/2026/10/ثاني-ابتدائي-الفصل-الدراسي-الثاني-ف2-موقع-منهجي.jpg";
-        const targetUrl = "https://madtiy.net";
-
-        const gradesList = [
-            "اول ابتدائي", "ثاني ابتدائي", 
-            "ثالث ابتدائي", "رابع ابتدائي", 
-            "خامس ابتدائي", "سادس ابتدائي",
-            "اول متوسط", "ثاني متوسط", 
-            "ثالث متوسط", "أول ثانوي", 
-            "ثاني ثانوي", "ثالث ثانوي"
-        ];
-
-        function generateGradeCards() {
-            const container = document.getElementById('grades-grid');
-            let htmlContent = '';
-
-            gradesList.forEach(grade => {
-                htmlContent += `
-                    <a href="${targetUrl}" target="_blank" class="grade-card">
-                        <div class="grade-box">
-                            <div class="green-circle">
-                                <img src="${imgUrl}" alt="${grade}" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\\'font-size:30px; color:white; position:absolute; top:20%;\\'>🧑‍🎓</span>';">
-                                <div class="pink-ribbon">${grade}</div>
-                            </div>
-                        </div>
-                        <div class="grade-title">الصف ${grade}...</div>
-                    </a>
-                `;
-            });
-
-            container.innerHTML = htmlContent;
-        }
-
-        function switchSemester(semesterNumber) {
-            const tab1 = document.getElementById('tab1');
-            const tab2 = document.getElementById('tab2');
-
-            if (semesterNumber === 1) {
-                tab1.classList.add('active');
-                tab2.classList.remove('active');
-            } else {
-                tab2.classList.add('active');
-                tab1.classList.remove('active');
+package net.madty.app
+
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
+import android.os.Bundle
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.webkit.CookieManager
+import android.webkit.DownloadListener
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.FrameLayout
+import android.widget.Toast
+
+class MainActivity : Activity() {
+
+    private lateinit var webView: WebView
+
+    // الواجهة المحلية الحالية داخل assets
+    private val homeUrl = "file:///android_asset/assets/index.html"
+
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        window.statusBarColor = Color.rgb(13, 118, 124)
+        window.navigationBarColor = Color.rgb(13, 118, 124)
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
+
+        webView = WebView(this).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundColor(Color.WHITE)
+
+            settings.apply {
+                javaScriptEnabled = true
+                domStorageEnabled = true
+                loadsImagesAutomatically = true
+                javaScriptCanOpenWindowsAutomatically = true
+                setSupportMultipleWindows(false)
+                useWideViewPort = true
+                loadWithOverviewMode = true
+                builtInZoomControls = true
+                displayZoomControls = false
+                cacheMode = WebSettings.LOAD_DEFAULT
+
+                // السماح بقراءة ملفات الواجهة المحلية ومواردها.
+                // لا تستخدم هذه الإعدادات لفتح ملفات غير موثوقة.
+                allowFileAccess = true
+                allowContentAccess = true
+                mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
             }
         }
 
-        window.onload = function() {
-            generateGradeCards();
-        };
-    </script>
-</body>
-</html>
+        CookieManager.getInstance().apply {
+            setAcceptCookie(true)
+            setAcceptThirdPartyCookies(webView, true)
+        }
+
+        webView.webChromeClient = WebChromeClient()
+
+        webView.webViewClient = object : WebViewClient() {
+
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+                return handleNavigation(request.url)
+            }
+
+            @Suppress("DEPRECATION")
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                url: String
+            ): Boolean {
+                return handleNavigation(Uri.parse(url))
+            }
+        }
+
+        // تمرير روابط التنزيل إلى تطبيق قادر على فتح الملف أو تنزيله.
+        webView.setDownloadListener(
+            DownloadListener { url, _, _, mimeType, _ ->
+                openDownload(url, mimeType)
+            }
+        )
+
+        setContentView(
+            FrameLayout(this).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                addView(webView)
+            }
+        )
+
+        if (savedInstanceState == null) {
+            webView.loadUrl(homeUrl)
+        } else {
+            val restored = webView.restoreState(savedInstanceState)
+            if (restored == null) webView.loadUrl(homeUrl)
+        }
+    }
+
+    /**
+     * يبقي صفحات الموقع داخل WebView.
+     * روابط التطبيقات الخارجية مثل الهاتف والبريد تفتح في تطبيقاتها.
+     */
+    private fun handleNavigation(uri: Uri): Boolean {
+        val scheme = uri.scheme.orEmpty().lowercase()
+        val host = uri.host.orEmpty().lowercase()
+
+        if (scheme == "http" || scheme == "https") {
+            // موقع madty.net ونطاقاته الفرعية تبقى داخل التطبيق.
+            if (
+                host == "madty.net" ||
+                host == "www.madty.net" ||
+                host.endsWith(".madty.net")
+            ) {
+                return false
+            }
+
+            // تبقى روابط الويب الأخرى داخل WebView كذلك، حتى تعمل
+            // التحويلات وروابط الصور وملفات PDF داخل عرض التطبيق.
+            return false
+        }
+
+        if (
+            scheme == "tel" ||
+            scheme == "mailto" ||
+            scheme == "sms" ||
+            scheme == "geo"
+        ) {
+            return try {
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+                true
+            } catch (_: Exception) {
+                Toast.makeText(
+                    this,
+                    "لا يوجد تطبيق مناسب لفتح هذا الرابط",
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+        }
+
+        if (scheme == "intent") {
+            return try {
+                val intent = Intent.parseUri(uri.toString(), Intent.URI_INTENT_SCHEME)
+                startActivity(intent)
+                true
+            } catch (_: Exception) {
+                Toast.makeText(
+                    this,
+                    "تعذر فتح الرابط",
+                    Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+        }
+
+        // السماح لـ WebView بمعالجة المخططات الأخرى افتراضيًا.
+        return false
+    }
+
+    private fun openDownload(url: String, mimeType: String?) {
+        try {
+            val uri = Uri.parse(url)
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, mimeType ?: "*/*")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+        } catch (_: Exception) {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            } catch (_: Exception) {
+                Toast.makeText(
+                    this,
+                    "تعذر فتح رابط التنزيل. تحقق من وجود تطبيق مناسب للملف.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (::webView.isInitialized) {
+            webView.saveState(outState)
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    @Deprecated("Deprecated in Android API, retained for back navigation")
+    override fun onBackPressed() {
+        if (::webView.isInitialized && webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onDestroy() {
+        if (::webView.isInitialized) {
+            webView.stopLoading()
+            webView.webChromeClient = null
+            webView.webViewClient = WebViewClient()
+            (webView.parent as? ViewGroup)?.removeView(webView)
+            webView.destroy()
+        }
+        super.onDestroy()
+    }
+}
