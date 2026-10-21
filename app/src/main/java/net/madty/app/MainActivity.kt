@@ -18,7 +18,7 @@ import android.net.Uri
 
 class MainActivity : Activity() {
     private lateinit var webView: WebView
-    private val homeUrl = "https://www.madty.net/"
+    private val homeUrl = "file:///android_asset/assets/index.html"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
