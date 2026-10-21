@@ -17,79 +17,167 @@ import android.content.Intent
 import android.net.Uri
 
 class MainActivity : Activity() {
+
     private lateinit var webView: WebView
-    private val homeUrl = "https://www.madty.net/"
+
+    // الواجهة الرئيسية المحلية داخل التطبيق
+    private val homeUrl =
+        "file:///android_asset/assets/index.html"
+
+    // نطاق الموقع
+    private val websiteHost = "madty.net"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = Color.rgb(13, 118, 124)
-        window.navigationBarColor = Color.rgb(13, 118, 124)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        window.statusBarColor = Color.rgb(13, 118, 77)
+        window.navigationBarColor = Color.rgb(13, 118, 77)
+
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
 
         webView = WebView(this)
+
         webView.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        webView.settings.javaScriptEnabled = true
-        webView.settings.domStorageEnabled = true
-        webView.settings.loadsImagesAutomatically = true
-        webView.settings.javaScriptCanOpenWindowsAutomatically = true
-        webView.settings.setSupportMultipleWindows(false)
-        webView.settings.allowFileAccess = false
-        webView.settings.allowContentAccess = true
+
+        webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            loadsImagesAutomatically = true
+            javaScriptCanOpenWindowsAutomatically = true
+            setSupportMultipleWindows(false)
+            allowFileAccess = true
+            allowContentAccess = true
+            builtInZoomControls = false
+            displayZoomControls = false
+            useWideViewPort = true
+            loadWithOverviewMode = true
+        }
 
         CookieManager.getInstance().setAcceptCookie(true)
-        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)
+
+        CookieManager.getInstance()
+            .setAcceptThirdPartyCookies(webView, true)
 
         webView.webChromeClient = WebChromeClient()
+
         webView.webViewClient = object : WebViewClient() {
+
             override fun shouldOverrideUrlLoading(
                 view: WebView,
                 request: WebResourceRequest
             ): Boolean {
-                val uri = request.url
-                val host = uri.host.orEmpty().lowercase()
 
-                if (
-                    host == "madty.net" ||
-                    host == "www.madty.net" ||
-                    host.endsWith(".madty.net")
-                ) {
-                    return false
-                }
+                return handleUrl(request.url)
+            }
 
-                return try {
-                    startActivity(Intent(Intent.ACTION_VIEW, uri))
-                    true
-                } catch (_: Exception) {
-                    false
+            @Suppress("DEPRECATION")
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                url: String
+            ): Boolean {
+
+                return handleUrl(Uri.parse(url))
+            }
+
+            override fun onReceivedError(
+                view: WebView,
+                request: WebResourceRequest,
+                error: android.webkit.WebResourceError
+            ) {
+                super.onReceivedError(view, request, error)
+
+                if (request.isForMainFrame) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "تعذر تحميل الصفحة. تحقق من اتصال الإنترنت.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
 
-        webView.setDownloadListener(DownloadListener { url, _, _, _, _ ->
-            try {
-                startActivity(
-                    Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                )
-            } catch (_: Exception) {
-                Toast.makeText(
-                    this,
-                    "تعذر فتح رابط التنزيل",
-                    Toast.LENGTH_SHORT
-                ).show()
+        // فتح روابط التنزيل
+        webView.setDownloadListener(
+            DownloadListener { url, _, _, _, _ ->
+                try {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(url)
+                    )
+                    startActivity(intent)
+                } catch (_: Exception) {
+                    Toast.makeText(
+                        this,
+                        "تعذر فتح رابط التنزيل",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-        })
+        )
 
-        setContentView(FrameLayout(this).apply {
-            addView(webView)
-        })
+        setContentView(
+            FrameLayout(this).apply {
+                addView(
+                    webView,
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    )
+                )
+            }
+        )
 
         if (savedInstanceState == null) {
             webView.loadUrl(homeUrl)
         } else {
-            webView.restoreState(savedInstanceState)
+            val restored = webView.restoreState(savedInstanceState)
+
+            if (restored == null) {
+                webView.loadUrl(homeUrl)
+            }
+        }
+    }
+
+    private fun handleUrl(uri: Uri): Boolean {
+
+        val scheme = uri.scheme.orEmpty().lowercase()
+        val host = uri.host.orEmpty().lowercase()
+
+        // السماح بفتح الواجهة المحلية ومواردها
+        if (scheme == "file") {
+            return false
+        }
+
+        // إبقاء صفحات الموقع داخل التطبيق
+        if (
+            (scheme == "https" || scheme == "http") &&
+            (
+                host == websiteHost ||
+                host == "www.$websiteHost" ||
+                host.endsWith(".$websiteHost")
+            )
+        ) {
+            return false
+        }
+
+        // فتح الروابط الخارجية في المتصفح
+        return try {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, uri)
+            )
+            true
+        } catch (_: Exception) {
+            Toast.makeText(
+                this,
+                "تعذر فتح الرابط",
+                Toast.LENGTH_SHORT
+            ).show()
+            true
         }
     }
 
@@ -98,7 +186,7 @@ class MainActivity : Activity() {
         super.onSaveInstanceState(outState)
     }
 
-    @Deprecated("Deprecated in Android API, retained for back navigation")
+    @Deprecated("Deprecated in Android API")
     override fun onBackPressed() {
         if (::webView.isInitialized && webView.canGoBack()) {
             webView.goBack()
@@ -108,7 +196,10 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
-        if (::webView.isInitialized) webView.destroy()
+        if (::webView.isInitialized) {
+            webView.stopLoading()
+            webView.destroy()
+        }
         super.onDestroy()
     }
 }
