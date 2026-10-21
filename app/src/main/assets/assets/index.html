@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منهجي - الواجهة الرئيسية</title>
+    <title>منهجي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-green: #0c7c4d;
+            --primary-green: #0d7c4a;
             --dark-green: #065c37;
             --bg-color: #f4f9f6;
             --text-dark: #333;
@@ -28,23 +28,25 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden; /* منع تمرير الصفحة بالكامل */
         }
 
+        /* حاوية التطبيق الأساسية */
         .app-container {
             width: 100%;
             max-width: 420px;
-            height: 850px;
+            height: 100%;
+            max-height: 850px;
             background-color: var(--bg-color);
             position: relative;
             overflow-y: auto;
             overflow-x: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             border-radius: 20px;
-            padding-bottom: 80px;
+            padding-bottom: 80px; /* مساحة للشريط السفلي الثابت */
         }
 
-        /* إخفاء شريط التمرير */
         .app-container::-webkit-scrollbar {
             display: none;
         }
@@ -69,7 +71,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
         }
 
         .header-icons {
@@ -85,16 +86,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
             transition: 0.2s;
         }
         
         .icon-btn:active { transform: scale(0.9); }
 
         .header-title h1 {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
             text-align: right;
+            margin-bottom: 5px;
         }
 
         .header-title p {
@@ -133,7 +134,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 16px;
         }
 
         .icon-blue { background: #e8f0fe; color: #1967d2; }
@@ -141,13 +141,13 @@
         .icon-red { background: #fce8e6; color: #c5221f; }
 
         .stat-card h3 {
-            font-size: 22px;
+            font-size: 24px;
             color: var(--text-dark);
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
 
         .stat-card p {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-gray);
             font-weight: 600;
         }
@@ -163,25 +163,31 @@
             justify-content: space-between;
             align-items: center;
             transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         
         .promo-banner:active { transform: scale(0.98); }
 
+        .promo-text {
+            text-align: center;
+            flex: 1;
+        }
+
         .promo-text h2 {
-            font-size: 18px;
+            font-size: 20px;
             margin-bottom: 5px;
         }
 
         .promo-text p {
-            font-size: 11px;
+            font-size: 12px;
             opacity: 0.8;
             line-height: 1.5;
         }
 
         .promo-icon {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -204,17 +210,17 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
             color: var(--text-dark);
         }
 
         .section-title::before {
             content: '';
-            width: 4px;
+            width: 5px;
             height: 24px;
             background-color: var(--primary-green);
-            border-radius: 4px;
+            border-radius: 5px;
         }
 
         .badge {
@@ -229,21 +235,22 @@
             gap: 5px;
         }
 
+        /* التبويبات */
         .tabs {
             display: flex;
             background: white;
             border-radius: 30px;
-            padding: 5px;
+            padding: 6px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
 
         .tab {
             flex: 1;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             border-radius: 25px;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
             color: var(--text-dark);
             cursor: pointer;
@@ -259,10 +266,21 @@
             color: white;
         }
 
-        .tab img {
-            width: 20px;
-            height: 20px;
+        /* أيقونة العلم */
+        .flag-icon {
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .flag-icon img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
 
@@ -276,7 +294,7 @@
         .grade-card {
             background: white;
             border-radius: 15px;
-            padding: 10px;
+            padding: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03);
             transition: 0.2s;
             display: flex;
@@ -289,12 +307,12 @@
             transform: scale(0.95);
         }
 
-        /* المربع الرمادي الفاتح داخ البطاقة */
+        /* المربع الفاتح داخ البطاقة */
         .grade-box {
             background: #f7f9f8;
             width: 100%;
             border-radius: 12px;
-            padding: 15px 10px;
+            padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -303,15 +321,15 @@
 
         /* الدائرة الخضراء */
         .green-circle {
-            width: 85px;
-            height: 85px;
+            width: 90px;
+            height: 90px;
             background: var(--primary-green);
             border-radius: 50%;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             overflow: hidden;
         }
 
@@ -323,15 +341,16 @@
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 1;
         }
 
         /* الشريط الوردي فوق الدائرة */
         .pink-ribbon {
             background: var(--pink);
             color: white;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
-            padding: 3px 8px;
+            padding: 4px 0;
             position: absolute;
             bottom: 0;
             width: 100%;
@@ -340,10 +359,10 @@
         }
 
         .grade-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-dark);
-            margin-top: 8px;
+            margin-top: 10px;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
@@ -351,31 +370,34 @@
             width: 100%;
         }
 
-        /* --- شريط التنقل السفلي --- */
+        /* --- شريط التنقل السفلي الثابت --- */
         .bottom-nav {
-            position: absolute;
+            position: fixed;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
-            height: 65px;
+            max-width: 420px; /* ليتطابق مع عرض التطبيق */
+            height: 75px;
             background: white;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            z-index: 10;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom); /* لدعم هواتف الآيفون */
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
-            color: var(--text-dark);
-            font-size: 11px;
-            font-weight: 600;
+            gap: 4px;
+            color: #555;
+            font-size: 12px;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
             width: 60px;
@@ -384,26 +406,28 @@
         .nav-item:active { transform: scale(0.9); }
 
         .nav-item svg {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             fill: none;
-            stroke: currentColor;
+            stroke: #555;
             stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        /* الزر الدائري في منتصف الشريط */
+        /* الزر الدائري البارز في المنتصف */
         .nav-center-btn {
-            width: 65px;
-            height: 65px;
+            width: 70px;
+            height: 70px;
             background: white;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            top: -25px;
+            top: -30px;
             box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-            border: 4px solid var(--bg-color);
+            border: 5px solid var(--bg-color);
             cursor: pointer;
             transition: 0.2s;
         }
@@ -411,15 +435,13 @@
         .nav-center-btn:active { transform: scale(0.9); }
 
         .nav-center-btn .inner-circle {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             background: var(--primary-green);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            font-size: 24px;
         }
         
         .nav-center-btn .inner-circle svg {
@@ -484,7 +506,7 @@
                 <h2>أدواتي الدراسية</h2>
                 <p>مهام، ملاحظات، جدول، عداد اختبارات<br>ونسبة موزونة</p>
             </div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
         </a>
 
         <!-- قسم الفصول الدراسية -->
@@ -500,56 +522,55 @@
             <!-- أزرار التبويب -->
             <div class="tabs">
                 <div class="tab active" id="tab1" onclick="switchSemester(1)">
+                    <div class="flag-icon"><img src="https://flagcdn.com/w40/sa.png" alt="SA"></div>
                     الفصل الاول
-                    <img src="https://flagcdn.com/w20/sa.png" alt="SA">
                 </div>
                 <div class="tab" id="tab2" onclick="switchSemester(2)">
+                    <div class="flag-icon"><img src="https://flagcdn.com/w40/sa.png" alt="SA"></div>
                     الفصل الثاني
-                    <img src="https://flagcdn.com/w20/sa.png" alt="SA">
                 </div>
             </div>
 
-            <!-- شبكة الصفوف (يتم تعبئتها بالجافاسكريبت) -->
+            <!-- شبكة الصفوف -->
             <div class="grades-grid" id="grades-grid">
-                <!-- سيتم وضع البطاقات هنا تلقائياً -->
+                <!-- سيتم تعبئتها بالجافاسكريبت -->
             </div>
         </div>
-
-        <!-- شريط التنقل السفلي -->
-        <nav class="bottom-nav">
-            <a href="https://madtiy.net" target="_blank" class="nav-item">
-                <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                المزيد
-            </a>
-            <a href="https://madtiy.net" target="_blank" class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                التنزيلات
-            </a>
-            
-            <a href="https://madtiy.net" target="_blank" class="nav-center-btn">
-                <div class="inner-circle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                </div>
-            </a>
-
-            <a href="https://madtiy.net" target="_blank" class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                المفضلة
-            </a>
-            <a href="https://madtiy.net" target="_blank" class="nav-item">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2"></path><path d="M5 3L2 6"></path><path d="M19 3l3 3"></path></svg>
-                المنبه
-            </a>
-        </nav>
     </div>
 
-    <!-- سكربت لتوليد الصفوف والتبديل بين الفصول -->
+    <!-- شريط التنقل السفلي الثابت -->
+    <nav class="bottom-nav">
+        <a href="https://madtiy.net" target="_blank" class="nav-item">
+            <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            المزيد
+        </a>
+        <a href="https://madtiy.net" target="_blank" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            التنزيلات
+        </a>
+        
+        <a href="https://madtiy.net" target="_blank" class="nav-center-btn">
+            <div class="inner-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            </div>
+        </a>
+
+        <a href="https://madtiy.net" target="_blank" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+            المفضلة
+        </a>
+        <a href="https://madtiy.net" target="_blank" class="nav-item">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2"></path><path d="M5 3L2 6"></path><path d="M19 3l3 3"></path></svg>
+            المنبه
+        </a>
+    </nav>
+
     <script>
-        // الرابط الخاص بالصورة الذي طلبته
+        // الرابط المطلوب للصور
         const imgUrl = "https://www.mnhaje.com/wp-content/uploads/2026/10/ثاني-ابتدائي-الفصل-الدراسي-الثاني-ف2-موقع-منهجي.jpg";
         const targetUrl = "https://madtiy.net";
 
-        // أسماء الصفوف الـ 12
+        // قائمة الصفوف
         const gradesList = [
             "اول ابتدائي", "ثاني ابتدائي", 
             "ثالث ابتدائي", "رابع ابتدائي", 
@@ -559,7 +580,7 @@
             "ثاني ثانوي", "ثالث ثانوي"
         ];
 
-        // دالة لإنشاء بطاقات الصفوف
+        // دالة توليد البطاقات
         function generateGradeCards() {
             const container = document.getElementById('grades-grid');
             let htmlContent = '';
@@ -569,9 +590,7 @@
                     <a href="${targetUrl}" target="_blank" class="grade-card">
                         <div class="grade-box">
                             <div class="green-circle">
-                                <!-- الصورة -->
-                                <img src="${imgUrl}" alt="${grade}" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\\'font-size:40px; color:white;\\'>🧑‍🎓</span>';">
-                                <!-- الشريط الوردي -->
+                                <img src="${imgUrl}" alt="${grade}" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\\'font-size:45px; color:white; position:absolute; top:20%;\\'>🧑‍🎓</span>';">
                                 <div class="pink-ribbon">${grade}</div>
                             </div>
                         </div>
@@ -583,7 +602,7 @@
             container.innerHTML = htmlContent;
         }
 
-        // دالة التبديل بين الفصول (تغيير لون التبويب)
+        // دالة التبديل بين الفصول
         function switchSemester(semesterNumber) {
             const tab1 = document.getElementById('tab1');
             const tab2 = document.getElementById('tab2');
@@ -595,10 +614,9 @@
                 tab2.classList.add('active');
                 tab1.classList.remove('active');
             }
-            // هنا يمكنك مستقبلاً إضافة كود لتغيير محتوى الصفوف بناءً على الفصل
         }
 
-        // تشغيل دالة توليد الصفوف عند تحميل الصفحة
+        // تشغيل عند التحميل
         window.onload = function() {
             generateGradeCards();
         };
