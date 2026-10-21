@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>واجهة التطبيق الدراسي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #0c7c4d;
+            --dark-green: #065c37;
+            --bg-color: #f5f9f7;
+            --text-dark: #333;
+            --text-gray: #7a7a7a;
+            --pink: #e84a8a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* حاوية التطبيق (شكل الموبايل) */
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 850px; /* ارتفاع تقريبي */
+            background-color: var(--bg-color);
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 20px; /* اختياري لشكل الجوال */
+            padding-bottom: 80px; /* مساحة للشريط السفلي */
+        }
+
+        /* إخفاء شريط التمرير */
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* --- الهيدر --- */
+        header {
+            background: linear-gradient(135deg, #0c7c4d 0%, #129b63 100%);
+            padding: 30px 20px 40px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            color: white;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 800;
+            text-align: right;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* --- قسم الإحصائيات (الكروت العلوية) --- */
+        .stats-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            margin-top: -20px; /* سحب الكروت للأعلى قليلاً فوق الهيدر */
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card {
+            background: white;
+            flex: 1;
+            border-radius: 15px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .icon-blue { background: #e8f0fe; color: #1967d2; }
+        .icon-green { background: #e6f4ea; color: #137333; }
+        .icon-red { background: #fce8e6; color: #c5221f; }
+
+        .stat-card h3 {
+            font-size: 22px;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 12px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        /* --- البانر الأخضر (أدواتي الدراسية) --- */
+        .promo-banner {
+            margin: 20px;
+            background-color: var(--dark-green);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .promo-text h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .promo-text p {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .promo-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- قسم الفصول الدراسية --- */
+        .semesters-section {
+            padding: 0 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background-color: var(--primary-green);
+            border-radius: 4px;
+        }
+
+        .badge {
+            background: #e6f4ea;
+            color: var(--primary-green);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* التبويبات (Tabs) */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 30px;
+            padding: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab.active {
+            background-color: var(--primary-green);
+            color: white;
+        }
+
+        .tab img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* الكروت السفلية (الصفوف) */
+        .grades-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .grade-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .grade-img-container {
+            background: var(--primary-green);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* صورة توضيحية (تم استخدام أيقونة بدلاً من الصورة الحقيقية) */
+        .grade-img-container::after {
+            content: '🧑‍🎓';
+            font-size: 50px;
+        }
+
+        .grade-label {
+            background: var(--pink);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .grade-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-top: 10px;
+        }
+
+        /* --- شريط التنقل السفلي --- */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-gray);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        /* الزر الأوسط البارز */
+        .nav-center-btn {
+            width: 65px;
+            height: 65px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            top: -25px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            border: 4px solid var(--bg-color);
+        }
+
+        .nav-center-btn .inner-circle {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- الهيدر -->
+        <header>
+            <div class="header-top">
+                <div class="header-icons">
+                    <!-- أيقونة القائمة -->
+                    <div class="icon-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </div>
+                    <!-- أيقونة المشاركة -->
+                    <div class="icon-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    </div>
+                </div>
+                <div class="header-title">
+                    <h1>مساء الخير</h1>
+                    <p>الأربعاء، 21 أكتوبر 2026</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- كروت الإحصائيات -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon icon-red">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                </div>
+                <h3>0</h3>
+                <p>مهامي</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-green">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <h3>0</h3>
+                <p>محفوظاتي</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon icon-blue">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
+                <h3>0</h3>
+                <p>منبهاتي</p>
+            </div>
+        </div>
+
+        <!-- البانر الأخضر -->
+        <div class="promo-banner">
+            <div class="promo-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.886h6.188l-5.012 3.636 1.912 5.886-5.012-3.636-5.012 3.636 1.912-5.886-5.012-3.636h6.188z"></path></svg>
+            </div>
+            <div class="promo-text">
+                <h2>أدواتي الدراسية</h2>
+                <p>مهام، ملاحظات، جدول، عداد اختبارات<br>ونسبة موزونة</p>
+            </div>
+            <!-- أيقونة السهم -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </div>
+
+        <!-- قسم الفصول الدراسية -->
+        <div class="semesters-section">
+            <div class="section-header">
+                <div class="section-title">الفصول الدراسية</div>
+                <div class="badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    2 فصول
+                </div>
+            </div>
+
+            <!-- التبويبات -->
+            <div class="tabs">
+                <div class="tab active">
+                    الفصل الاول
+                    <img src="https://flagcdn.com/w20/sa.png" alt="SA"> <!-- صورة علم كمثال -->
+                </div>
+                <div class="tab">
+                    الفصل الثاني
+                    <img src="https://flagcdn.com/w20/sa.png" alt="SA">
+                </div>
+            </div>
+
+            <!-- كروت الصفوف -->
+            <div class="grades-grid">
+                <div class="grade-card">
+                    <div class="grade-img-container">
+                        <!-- صورة الطفل هنا -->
+                        <div class="grade-label">اول ابتدائي</div>
+                    </div>
+                    <div class="grade-title">الصف الاول الابتدائي</div>
+                </div>
+                <div class="grade-card">
+                    <div class="grade-img-container">
+                        <!-- صورة الطفل هنا -->
+                        <div class="grade-label">ثاني ابتدائي</div>
+                    </div>
+                    <div class="grade-title">الصف الثاني الابتدائي</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- شريط التنقل السفلي -->
+        <nav class="bottom-nav">
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                المزيد
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                التنزيلات
+            </div>
+            
+            <!-- الزر الأوسط -->
+            <div class="nav-center-btn">
+                <div class="inner-circle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                المفضلة
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="12 6 12 12 16 14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                المنبه
+            </div>
+        </nav>
+    </div>
+
+</body>
+</html>
