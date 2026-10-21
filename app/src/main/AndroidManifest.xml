@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
+<!--Open VIP can improve the speed of decompilation, resource code translate to name automatically and activate the smart editing and automatic completion function-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="9"
+    android:splitTypes=""
+    package="com.mhma.mnhaji"
+    split="config.ar">
     <application
-        android:allowBackup="true"
-        android:label="مادتي"
-        android:supportsRtl="true"
-        android:usesCleartextTraffic="false"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar">
-
-        <activity
-            android:name="net.madty.app.MainActivity"
-            android:exported="true"
-            android:configChanges="orientation|screenSize|keyboardHidden">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
-
+        android:hasCode="false"
+        android:extractNativeLibs="false">
+        <meta-data
+            android:name="com.android.vending.derived.apk.id"
+            android:value="3" />
     </application>
-
 </manifest>
