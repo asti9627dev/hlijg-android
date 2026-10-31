@@ -1,286 +1,274 @@
-package net.madty.app
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق مادتي - الشعار الواضح</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-color:#137B7F; --bg-color:#f7f9f8; --text-dark:#222; --text-light:#777; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo',sans-serif; }
+        body { background:var(--bg-color); color:var(--text-dark); padding-bottom:80px; overflow-x:hidden; }
+        .page-section { display:none; }
+        .page-section.active { display:block; animation:slideUpFade .4s cubic-bezier(.4,0,.2,1) forwards; }
+        @keyframes slideUpFade { from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)} }
+        .header { background:var(--primary-color); padding:25px 20px 45px; border-radius:0 0 30px 30px; color:white; display:flex; justify-content:space-between; align-items:flex-start; position:relative; overflow:hidden; }
+        .header::before { content:''; position:absolute; width:150px; height:150px; background:rgba(255,255,255,.08); border-radius:50%; top:-40px; right:-40px; }
+        .header::after { content:''; position:absolute; width:100px; height:100px; background:rgba(255,255,255,.08); border-radius:50%; bottom:10px; left:60px; }
+        .header-title { text-align:right; z-index:1; }
+        .header-title h1 { font-size:28px; font-weight:800; margin-bottom:2px; }
+        .header-title p { font-size:14px; opacity:.9; }
+        .header-icons { display:flex; gap:15px; z-index:1; }
+        .icon-btn { background:rgba(255,255,255,.15); width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; color:white; font-size:18px; border:0; cursor:pointer; }
+        .container { padding:0 15px; margin-top:-25px; position:relative; z-index:2; }
+        .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+        .stat-card { background:white; border-radius:15px; padding:20px 10px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,.03); }
+        .stat-icon { width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin:0 auto 15px; font-size:20px; }
+        .icon-blue,.icon-green { background:#e0f2f2; color:var(--primary-color); }
+        .icon-red { background:#fce8e8; color:#d84343; }
+        .stat-card h2 { font-size:24px; font-weight:800; margin-bottom:5px; color:#111; }
+        .stat-card p { font-size:13px; color:var(--text-light); font-weight:700; }
+        .banner { background:var(--primary-color); border-radius:15px; padding:20px; color:white; display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; cursor:pointer; }
+        .banner-text h3 { font-size:22px; font-weight:800; margin-bottom:5px; }
+        .banner-text p { font-size:13px; opacity:.9; line-height:1.6; }
+        .banner-icon { color:rgba(255,255,255,.6); font-size:35px; transform:rotate(-15deg); }
+        .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
+        .section-title { display:flex; align-items:center; gap:8px; font-size:24px; font-weight:800; color:#111; }
+        .section-title::before { content:''; width:5px; height:24px; background:var(--primary-color); border-radius:3px; }
+        .semester-badge { background:#e0f2f2; color:var(--primary-color); padding:6px 14px; border-radius:20px; font-size:14px; font-weight:800; display:flex; align-items:center; gap:5px; border:1px solid #b2dfdb; }
+        .tabs-container { background:white; border-radius:30px; padding:5px; display:flex; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,.05); border:1px solid #eaeaea; position:relative; }
+        .tab { flex:1; text-align:center; padding:8px 5px; border-radius:25px; font-weight:700; font-size:15px; color:#777; cursor:pointer; transition:all .3s; display:flex; justify-content:center; align-items:center; gap:8px; position:relative; z-index:2; }
+        .tab.active { color:white; }
+        .tab-bg { position:absolute; top:5px; bottom:5px; width:calc(50% - 5px); background:var(--primary-color); border-radius:25px; transition:transform .3s; z-index:1; box-shadow:0 4px 10px rgba(19,123,127,.3); }
+        .tab-icon-img { width:32px; height:32px; border-radius:50%; object-fit:cover; background:#fff; border:1px solid #ddd; }
+        .grades-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px 15px; margin-bottom:20px; }
+        .grade-card { display:flex; flex-direction:column; cursor:pointer; text-decoration:none; }
+        .grade-img-box { width:100%; aspect-ratio:1.5/1; background:#fff; border:1px solid #dcdcdc; overflow:hidden; display:flex; justify-content:center; align-items:center; }
+        .grade-img-box img { width:100%; height:100%; object-fit:fill; }
+        .grade-title { padding-top:10px; text-align:center; color:#444; font-size:15px; font-weight:700; }
+        .alert-container { display:flex; align-items:center; justify-content:space-between; background:#b32020; color:white; padding:12px 15px; border-radius:12px; font-size:14px; font-weight:700; margin-bottom:20px; box-shadow:0 4px 15px rgba(179,32,32,.3); transition:opacity .3s; }
+        .close-alert-btn { background:rgba(255,255,255,.2); border:0; color:white; width:30px; height:30px; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; font-size:14px; margin-right:10px; }
+        .more-page-header { background:linear-gradient(to bottom,#0b5c38,#0D767C); color:white; padding:30px 20px 40px; border-radius:0 0 30px 30px; text-align:center; position:relative; }
+        .logo-container { width:100px; height:100px; background:white; border-radius:50%; margin:0 auto 15px; display:flex; justify-content:center; align-items:center; box-shadow:0 4px 10px rgba(0,0,0,.1); overflow:hidden; padding:5px; }
+        .logo-container img { width:100%; height:100%; object-fit:contain; border-radius:50%; }
+        .more-page-header h2 { font-size:22px; font-weight:800; margin-bottom:5px; }
+        .more-page-header p { font-size:14px; opacity:.8; }
+        .menu-list { padding:20px 15px; margin-top:-20px; display:flex; flex-direction:column; gap:12px; }
+        .menu-item { background:white; border-radius:12px; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; text-decoration:none; color:#333; box-shadow:0 2px 8px rgba(0,0,0,.02); transition:transform .2s; position:relative; cursor:pointer; border:0; width:100%; text-align:right; }
+        .menu-item:active { transform:scale(.98); }
+        .menu-item-right { display:flex; align-items:center; gap:15px; }
+        .menu-icon { width:40px; height:40px; background:#eaf6ef; color:#0D767C; border-radius:10px; display:flex; justify-content:center; align-items:center; font-size:18px; flex-shrink:0; }
+        .menu-text { font-size:16px; font-weight:700; color:#222; }
+        .menu-arrow { color:#ccc; font-size:14px; }
+        .menu-badge { position:absolute; right:20px; background:#ffb300; color:#000; font-size:12px; font-weight:800; width:24px; height:24px; border-radius:50%; display:flex; justify-content:center; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,.2); }
+        .bottom-nav { position:fixed; bottom:0; left:0; width:100%; height:75px; background:white; display:flex; justify-content:space-between; align-items:center; box-shadow:0 -2px 15px rgba(0,0,0,.06); z-index:100; padding:0 10px; }
+        .nav-item { display:flex; flex-direction:column; align-items:center; color:#999; font-size:12px; font-weight:700; flex:1; cursor:pointer; gap:4px; position:relative; }
+        .nav-item i { font-size:22px; }
+        .nav-item.active { color:var(--primary-color); }
+        .center-btn-wrapper { position:relative; top:-30px; background:white; border-radius:50%; padding:6px; box-shadow:0 -4px 15px rgba(0,0,0,.08); margin:0 10px; cursor:pointer; }
+        .center-btn { width:65px; height:65px; background:white; border-radius:50%; display:flex; justify-content:center; align-items:center; color:white; font-size:30px; border:4px solid white; overflow:hidden; padding:2px; }
+        .badge { position:absolute; top:-4px; right:15px; background:#ffb300; color:#000; font-size:11px; font-weight:900; width:20px; height:20px; border-radius:50%; display:flex; justify-content:center; align-items:center; border:2px solid white; }
+    </style>
+</head>
+<body>
+    <div id="home-page" class="page-section active">
+        <header class="header">
+            <div class="header-title">
+                <h1>مساء الخير</h1>
+                <p>السبت، 31 أكتوبر 2026</p>
+            </div>
+            <div class="header-icons">
+                <button class="icon-btn" onclick="shareApp()" aria-label="مشاركة التطبيق"><i class="fa-solid fa-share-nodes"></i></button>
+                <button class="icon-btn" onclick="switchPage('more-page')" aria-label="فتح القائمة"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </header>
 
-import android.app.Activity
-import android.content.Intent
-import android.graphics.Color
-import android.net.Uri
-import android.os.Bundle
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.webkit.CookieManager
-import android.webkit.DownloadListener
-import android.webkit.WebChromeClient
-import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.widget.FrameLayout
-import android.widget.Toast
+        <main class="container">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-icon icon-blue"><i class="fa-regular fa-clock"></i></div><h2>0</h2><p>منبهاتي</p></div>
+                <div class="stat-card"><div class="stat-icon icon-green"><i class="fa-regular fa-bookmark"></i></div><h2>1</h2><p>محفوظاتي</p></div>
+                <div class="stat-card"><div class="stat-icon icon-red"><i class="fa-solid fa-list-check"></i></div><h2>0</h2><p>مهامي</p></div>
+            </div>
 
-class MainActivity : Activity() {
+            <div class="banner" onclick="openSite('https://www.madtiy.net')">
+                <div class="banner-text">
+                    <h3>أدواتي الدراسية</h3>
+                    <p>مهام، ملاحظات، جدول، عداد اختبارات<br>ونسبة موزونة</p>
+                </div>
+                <div class="banner-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            </div>
 
-    private lateinit var webView: WebView
+            <div class="section-header">
+                <div class="section-title">الفصول الدراسية</div>
+                <div class="semester-badge"><i class="fa-solid fa-book-open"></i> فصلان دراسيان</div>
+            </div>
 
-    // الصفحة الرئيسية المحلية للتطبيق
-    private val homeUrl =
-        "file:///android_asset/assets/index.html"
+            <div class="tabs-container">
+                <div class="tab-bg" id="tabBg"></div>
+                <div class="tab active" onclick="switchSemester(1, this)">
+                    الفصل الأول
+                    <img src="https://www.madtiy.net/wp-content/uploads/2024/08/الفصل-الدراسي-الاول-مادتي.jpg" class="tab-icon-img" alt="الفصل الأول">
+                </div>
+                <div class="tab" onclick="switchSemester(2, this)">
+                    الفصل الثاني
+                    <img src="https://www.madtiy.net/wp-content/uploads/2022/05/الفصل-الدراسي-الثاني.jpg" class="tab-icon-img" alt="الفصل الثاني">
+                </div>
+            </div>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+            <div class="grades-grid" id="gradesGrid"></div>
 
-        window.statusBarColor = Color.rgb(13, 118, 124)
-        window.navigationBarColor = Color.rgb(13, 118, 124)
+            <div class="alert-container" id="notificationAlert">
+                <div style="flex:1">لن تعمل المنبهات والتذكيرات بدون<br>السماح بالإشعارات</div>
+                <button class="close-alert-btn" onclick="closeAlert()" aria-label="إغلاق التنبيه"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </main>
+    </div>
 
-        window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-        )
+    <div id="more-page" class="page-section">
+        <div class="more-page-header">
+            <div class="logo-container">
+                <img src="https://www.madtiy.net/wp-content/uploads/2024/10/موقع-مادتي-التعليمي.jpg" alt="شعار مادتي" onerror="this.src='https://via.placeholder.com/75?text=madtiy'">
+            </div>
+            <h2>موقع مادتي</h2>
+            <p>madtiy.net</p>
+        </div>
 
-        webView = WebView(this)
+        <div class="menu-list">
+            <a href="#" class="menu-item" onclick="switchPage('home-page'); return false;">
+                <div class="menu-item-right">
+                    <div class="menu-icon"><i class="fa-solid fa-house"></i></div>
+                    <span class="menu-text">الرئيسية</span>
+                </div>
+                <i class="fa-solid fa-chevron-left menu-arrow"></i>
+            </a>
+        </div>
+    </div>
 
-        webView.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="openSite('https://www.madtiy.net')"><i class="fa-solid fa-download"></i><span>التنزيلات</span></div>
+        <div class="nav-item" onclick="openSite('https://www.madtiy.net')"><i class="fa-regular fa-bookmark"></i><span>المفضلة</span><span class="badge">1</span></div>
+        <div class="center-btn-wrapper" onclick="switchPage('home-page')" aria-label="الرئيسية"><div class="center-btn"><i class="fa-solid fa-book-open"></i></div></div>
+        <div class="nav-item" onclick="openSite('https://www.madtiy.net')"><i class="fa-regular fa-clock"></i><span>المنبه</span></div>
+        <div class="nav-item" id="nav-more" onclick="switchPage('more-page', 'nav-more')"><i class="fa-solid fa-bars"></i><span>المزيد</span></div>
+    </nav>
 
-        webView.setBackgroundColor(Color.WHITE)
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertBox = document.getElementById('notificationAlert');
+            if (sessionStorage.getItem('alertDismissed') === 'true' && alertBox) {
+                alertBox.style.display = 'none';
+            }
+        });
 
-        webView.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            loadsImagesAutomatically = true
-            javaScriptCanOpenWindowsAutomatically = true
-
-            setSupportMultipleWindows(false)
-
-            useWideViewPort = true
-            loadWithOverviewMode = true
-
-            builtInZoomControls = true
-            displayZoomControls = false
-
-            cacheMode = WebSettings.LOAD_DEFAULT
-
-            allowFileAccess = true
-            allowContentAccess = true
-
-            mixedContentMode =
-                WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+        function closeAlert() {
+            const alertBox = document.getElementById('notificationAlert');
+            if (!alertBox) return;
+            alertBox.style.opacity = '0';
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+                sessionStorage.setItem('alertDismissed', 'true');
+            }, 300);
         }
 
-        CookieManager.getInstance().setAcceptCookie(true)
-
-        CookieManager.getInstance()
-            .setAcceptThirdPartyCookies(webView, true)
-
-        webView.webChromeClient = WebChromeClient()
-
-        webView.webViewClient = object : WebViewClient() {
-
-            override fun shouldOverrideUrlLoading(
-                view: WebView,
-                request: WebResourceRequest
-            ): Boolean {
-
-                return handleUrl(request.url)
-            }
-
-            @Suppress("DEPRECATION")
-            override fun shouldOverrideUrlLoading(
-                view: WebView,
-                url: String
-            ): Boolean {
-
-                return handleUrl(Uri.parse(url))
-            }
-        }
-
-        // التعامل مع روابط الملفات والتنزيلات
-        webView.setDownloadListener(
-            DownloadListener { url, _, _, mimeType, _ ->
-
-                openDownload(url, mimeType)
-            }
-        )
-
-        val container = FrameLayout(this)
-
-        container.addView(
-            webView,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-        )
-
-        setContentView(container)
-
-        if (savedInstanceState == null) {
-            webView.loadUrl(homeUrl)
-        } else {
-            val restored = webView.restoreState(savedInstanceState)
-
-            if (restored == null) {
-                webView.loadUrl(homeUrl)
-            }
-        }
-    }
-
-    // إبقاء صفحات الموقع داخل التطبيق
-    private fun handleUrl(uri: Uri): Boolean {
-
-        val scheme = uri.scheme.orEmpty().lowercase()
-        val host = uri.host.orEmpty().lowercase()
-
-        // صفحات madty.net تبقى داخل WebView
-        if (scheme == "https" || scheme == "http") {
-
-            if (
-                host == "madty.net" ||
-                host == "www.madty.net" ||
-                host.endsWith(".madty.net")
-            ) {
-                return false
-            }
-
-            // إبقاء روابط الويب الأخرى داخل التطبيق أيضًا
-            return false
-        }
-
-        // فتح الهاتف والبريد والرسائل في تطبيقاتها المناسبة
-        if (
-            scheme == "tel" ||
-            scheme == "mailto" ||
-            scheme == "sms" ||
-            scheme == "geo"
-        ) {
-            return try {
-
-                startActivity(
-                    Intent(Intent.ACTION_VIEW, uri)
-                )
-
-                true
-
-            } catch (_: Exception) {
-
-                Toast.makeText(
-                    this,
-                    "لا يوجد تطبيق مناسب لفتح هذا الرابط",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                true
-            }
-        }
-
-        // التعامل مع روابط intent الخاصة بأندرويد
-        if (scheme == "intent") {
-            return try {
-
-                val intent = Intent.parseUri(
-                    uri.toString(),
-                    Intent.URI_INTENT_SCHEME
-                )
-
-                startActivity(intent)
-                true
-
-            } catch (_: Exception) {
-
-                Toast.makeText(
-                    this,
-                    "تعذر فتح الرابط",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                true
+        function switchPage(pageId, navId) {
+            document.querySelectorAll('.page-section').forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) targetPage.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if (navId) {
+                const nav = document.getElementById(navId);
+                if (nav) nav.classList.add('active');
             }
         }
 
-        return false
-    }
+        function openSite(url) {
+            window.open(url, '_blank', 'noopener');
+        }
 
-    // محاولة فتح الملف أو رابط التنزيل
-    private fun openDownload(
-        url: String,
-        mimeType: String?
-    ) {
-
-        try {
-
-            val uri = Uri.parse(url)
-
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(
-                    uri,
-                    mimeType ?: "*/*"
-                )
-            }
-
-            startActivity(intent)
-
-        } catch (_: Exception) {
-
+        async function shareApp() {
+            const shareData = {
+                title: 'تطبيق مادتي',
+                text: 'اكتشف تطبيق مادتي للمواد والملفات التعليمية.',
+                url: 'https://www.madtiy.net'
+            };
             try {
-
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(url)
-                    )
-                )
-
-            } catch (_: Exception) {
-
-                Toast.makeText(
-                    this,
-                    "تعذر فتح رابط التنزيل",
-                    Toast.LENGTH_LONG
-                ).show()
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                } else if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(shareData.url);
+                    alert('تم نسخ رابط التطبيق للمشاركة');
+                } else {
+                    window.prompt('انسخ رابط التطبيق للمشاركة:', shareData.url);
+                }
+            } catch (error) {
+                if (error.name !== 'AbortError') alert('تعذرت مشاركة الرابط، حاول مرة أخرى.');
             }
         }
-    }
 
-    override fun onSaveInstanceState(
-        outState: Bundle
-    ) {
+        const dataTerm1 = [
+            { name: "الصف الاول الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/‪اول-ابتدائي-الفصل-الدراسي-الاول.jpg", link: "https://www.madtiy.net/fd1/sf1/" },
+            { name: "الصف الثاني الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/‪ثاني-ابتدائي-الفصل-الدراسي-الاول.jpg", link: "https://www.madtiy.net/fd1/sf2/" },
+            { name: "الصف الثالث الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/12/ثالث-ابتدائي-الفصل-الدراسي-الاول.jpg", link: "https://www.madtiy.net/fd1/sf3/" },
+            { name: "الصف الرابع الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/‪‪‪رابع-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/sf4/" },
+            { name: "الصف الخامس الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/‪خامس-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/sf5/" },
+            { name: "الصف السادس الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/‪سادس-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/sf6/" },
+            { name: "الصف الاول المتوسط", img: "https://www.madtiy.net/wp-content/uploads/2023/07/اول-متوسط-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/sf7/" },
+            { name: "الصف الثاني المتوسط", img: "https://www.madtiy.net/wp-content/uploads/2023/07/‪‪ثاني-متوسط-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/sf8/" },
+            { name: "الصف الثالث المتوسط", img: "https://www.madtiy.net/wp-content/uploads/2023/07/‪‪-ثالث-متوسط-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/sf9/" },
+            { name: "الصف الاول الثانوي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/اول-ثانوي-مسارات-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/%d8%a7%d9%84%d8%b5%d9%81-%d8%a7%d9%84%d8%a7%d9%88%d9%84-%d8%a7%d9%84%d8%ab%d8%a7%d9%86%d9%88%d9%8a/" },
+            { name: "الصف الثاني الثانوي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/ثاني-ثانوي-مسارات-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/%d8%a7%d9%84%d8%b5%d9%81-%d8%a7%d9%84%d8%ab%d8%a7%d9%86%d9%8a-%d8%a7%d9%84%d8%ab%d8%a7%d9%86%d9%88%d9%8a/" },
+            { name: "الصف الثالث الثانوي", img: "https://www.madtiy.net/wp-content/uploads/2023/08/‪ثالث-ثانوي-مسارات-الفصل-الدراسي-الاول-ف1.jpg", link: "https://www.madtiy.net/fd1/sf12/" }
+        ];
 
-        if (::webView.isInitialized) {
-            webView.saveState(outState)
+        const dataTerm2 = [
+            { name: "الصف الاول الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪‪اول-ابتدائي-الفصل-الدراسي-الثاني.jpg", link: "https://www.madtiy.net/fd2/sf01/" },
+            { name: "الصف الثاني الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪‪ثاني-ابتدائي-الفصل-الدراسي-الثاني.jpg", link: "https://www.madtiy.net/fd2/sf02/" },
+            { name: "الصف الثالث الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/12/‪ثالث-ابتدائي-الفصل-الدراسي-الثاني.jpg", link: "https://www.madtiy.net/fd2/sf03/" },
+            { name: "الصف الرابع الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪‪‪‪رابع-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf04/" },
+            { name: "الصف الخامس الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪‪خامس-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf05/" },
+            { name: "الصف السادس الابتدائي", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪‪سادس-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf06/" },
+            { name: "الصف الاول المتوسط", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪اول-متوسط-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf07/" },
+            { name: "الصف الثاني المتوسط", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪‪‪ثاني-متوسط-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf08/" },
+            { name: "الصف الثالث المتوسط", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪‪‪-ثالث-متوسط-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf09/" },
+            { name: "الصف الاول الثانوي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/اول-ثانوي-مسارات-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf010/" },
+            { name: "الصف الثاني الثانوي", img: "https://www.madtiy.net/wp-content/uploads/2023/07/‪ثاني-ثانوي-مسارات-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf012/" },
+            { name: "الصف الثالث الثانوي", img: "https://www.madtiy.net/wp-content/uploads/2023/11/‪‪ثالث-ثانوي-مسارات-الفصل-الدراسي-الثاني-ف2.jpg", link: "https://www.madtiy.net/fd2/sf011/" }
+        ];
+
+        function renderGrades(data) {
+            const grid = document.getElementById('gradesGrid');
+            grid.innerHTML = '';
+            data.forEach((grade, index) => {
+                const card = document.createElement('a');
+                card.className = 'grade-card';
+                card.href = grade.link;
+                card.target = '_blank';
+                card.rel = 'noopener';
+                card.style.animation = `slideUpFade .3s ease-out ${index * .05}s both`;
+                card.innerHTML = `<div class="grade-img-box"><img src="${grade.img}" alt="${grade.name}" loading="lazy"></div><div class="grade-title">${grade.name}</div>`;
+                grid.appendChild(card);
+            });
         }
 
-        super.onSaveInstanceState(outState)
-    }
-
-    @Deprecated("Deprecated in Android API")
-    override fun onBackPressed() {
-
-        if (
-            ::webView.isInitialized &&
-            webView.canGoBack()
-        ) {
-
-            webView.goBack()
-
-        } else {
-
-            super.onBackPressed()
-        }
-    }
-
-    override fun onDestroy() {
-
-        if (::webView.isInitialized) {
-
-            webView.stopLoading()
-            webView.webChromeClient = null
-
-            (webView.parent as? ViewGroup)
-                ?.removeView(webView)
-
-            webView.destroy()
+        function switchSemester(semesterNum, element) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            const tabBg = document.getElementById('tabBg');
+            if (semesterNum === 1) {
+                tabBg.style.transform = 'translateX(0%)';
+                renderGrades(dataTerm1);
+            } else {
+                tabBg.style.transform = 'translateX(-100%)';
+                renderGrades(dataTerm2);
+            }
         }
 
-        super.onDestroy()
-    }
-}
+        window.onload = () => {
+            renderGrades(dataTerm1);
+            document.getElementById('tabBg').style.transform = 'translateX(0%)';
+        };
+    </script>
+</body>
+</html>
