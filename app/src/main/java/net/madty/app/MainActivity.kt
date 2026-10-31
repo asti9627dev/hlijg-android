@@ -2,245 +2,164 @@ package net.madty.app
 
 import android.app.Activity
 import android.app.DownloadManager
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.webkit.CookieManager
 import android.webkit.DownloadListener
-import android.webkit.URLUtil
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.FrameLayout
 import android.widget.Toast
 
 class MainActivity : Activity() {
 
     private lateinit var webView: WebView
+    private val homeUrl = "file:///android_asset/assets/index.html"
+    private val siteHost = "madtiy.net"
 
-    // الصفحة الرئيسية داخل التطبيق
-    private val homeUrl =
-        "file:///android_asset/assets/index.html"
-
-    // نطاق الموقع
-    private val websiteHost = "madty.net"
-
+    @Suppress("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.statusBarColor = Color.rgb(13, 118, 124)
-        window.navigationBarColor = Color.rgb(13, 118, 124)
+        window.statusBarColor = android.graphics.Color.rgb(19, 123, 127)
+        window.navigationBarColor = android.graphics.Color.rgb(19, 123, 127)
 
-        window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-        )
-
-        // إنشاء WebView
         webView = WebView(this)
+        webView.setBackgroundColor(android.graphics.Color.WHITE)
 
-        webView.setBackgroundColor(Color.WHITE)
-
-        webView.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-
-        // إعدادات الموقع
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
             loadsImagesAutomatically = true
             javaScriptCanOpenWindowsAutomatically = true
-
             setSupportMultipleWindows(false)
-
             useWideViewPort = true
             loadWithOverviewMode = true
-
-            builtInZoomControls = true
+            builtInZoomControls = false
             displayZoomControls = false
-
-            cacheMode = WebSettings.LOAD_DEFAULT
-
             allowFileAccess = true
             allowContentAccess = true
-
-            mixedContentMode =
-                WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+            setGeolocationEnabled(true)
         }
 
-        // ملفات تعريف الارتباط
-        CookieManager.getInstance().apply {
-            setAcceptCookie(true)
-            setAcceptThirdPartyCookies(webView, true)
-        }
+        CookieManager.getInstance().setAcceptCookie(true)
+        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true)
 
-        // عرض النوافذ المنبثقة
-        webView.webChromeClient = WebChromeClient()
-
-        // التحكم في فتح الروابط
         webView.webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+            }
 
             override fun shouldOverrideUrlLoading(
-                view: WebView,
-                request: WebResourceRequest
+                view: WebView?,
+                request: WebResourceRequest?
             ): Boolean {
-                return handleUrl(request.url)
+                val url = request?.url?.toString() ?: return false
+                return handleUrl(url)
             }
 
             @Suppress("DEPRECATION")
-            override fun shouldOverrideUrlLoading(
-                view: WebView,
-                url: String
-            ): Boolean {
-                return handleUrl(Uri.parse(url))
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                return url?.let { handleUrl(it) } ?: false
             }
         }
 
-        // التعامل مع روابط التنزيل
+        webView.webChromeClient = WebChromeClient()
+
         webView.setDownloadListener(
-            DownloadListener { url, _, _, mimeType, _ ->
-                openDownload(url, mimeType)
+            DownloadListener { url, userAgent, contentDisposition, mimeType, _ ->
+                downloadFile(url, userAgent, contentDisposition, mimeType)
             }
         )
 
-        // إنشاء حاوية التطبيق
-        val container = FrameLayout(this)
+        setContentView(webView)
 
-        container.addView(
-            webView,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-        )
-
-        setContentView(container)
-
-        // استعادة الصفحة السابقة أو فتح الرئيسية
-        val restored = if (savedInstanceState != null) {
+        if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState)
         } else {
-            null
-        }
-
-        if (restored == null) {
             webView.loadUrl(homeUrl)
         }
     }
 
-    // تحديد طريقة فتح الروابط
-    private fun handleUrl(uri: Uri): Boolean {
+    private fun handleUrl(url: String): Boolean {
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            val uri = Uri.parse(url)
+            val host = uri.host.orEmpty()
+            if (host == siteHost || host.endsWith(".$siteHost")) {
+                return false
+            }
 
-        val scheme = uri.scheme?.lowercase() ?: return false
-
-        // السماح بفتح صفحات التطبيق والموقع داخلياً
-        if (scheme == "file" || scheme == "about") {
+            // إبقاء الروابط الخارجية داخل التطبيق لتجربة تصفح موحدة.
             return false
         }
 
-        if (scheme == "http" || scheme == "https") {
-
-            val host = uri.host?.lowercase() ?: return false
-
-            if (
-                host == websiteHost ||
-                host.endsWith(".$websiteHost")
-            ) {
-                return false
+        if (url.startsWith("tel:") || url.startsWith("mailto:") ||
+            url.startsWith("whatsapp:") || url.startsWith("intent:")
+        ) {
+            return try {
+                val intent = if (url.startsWith("intent:")) {
+                    Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
+                } else {
+                    Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                }
+                startActivity(intent)
+                true
+            } catch (_: Exception) {
+                Toast.makeText(this, "لا يوجد تطبيق مناسب لفتح الرابط", Toast.LENGTH_SHORT).show()
+                true
             }
         }
 
-        // فتح الروابط الخارجية في المتصفح أو التطبيق المناسب
-        return try {
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            startActivity(intent)
-            true
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(
-                this,
-                "لا يوجد تطبيق لفتح هذا الرابط",
-                Toast.LENGTH_SHORT
-            ).show()
-            true
-        } catch (e: Exception) {
-            true
-        }
+        return url.startsWith("javascript:") || url == "about:blank"
     }
 
-    // تنزيل الملفات من الموقع
-    private fun openDownload(url: String, mimeType: String?) {
-
+    private fun downloadFile(
+        url: String,
+        userAgent: String?,
+        contentDisposition: String?,
+        mimeType: String?
+    ) {
         try {
-
-            val fileName = URLUtil.guessFileName(
-                url,
-                null,
-                mimeType
+            val fileName = android.webkit.URLUtil.guessFileName(
+                url, contentDisposition, mimeType
             )
-
-            val request = DownloadManager.Request(Uri.parse(url))
-
-            request.setTitle(fileName)
-            request.setDescription("جاري تنزيل الملف...")
-            request.setNotificationVisibility(
-                DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
-            )
-
-            if (!mimeType.isNullOrEmpty()) {
-                request.setMimeType(mimeType)
+            val request = DownloadManager.Request(Uri.parse(url)).apply {
+                setTitle(fileName)
+                setDescription("جارٍ تنزيل الملف")
+                setNotificationVisibility(
+                    DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+                )
+                setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS, fileName
+                )
+                setAllowedOverMetered(true)
+                setAllowedOverRoaming(true)
+                if (!userAgent.isNullOrBlank()) {
+                    addRequestHeader("User-Agent", userAgent)
+                }
+                val cookies = CookieManager.getInstance().getCookie(url)
+                if (!cookies.isNullOrBlank()) {
+                    addRequestHeader("Cookie", cookies)
+                }
             }
-
-            // تمرير ملفات تعريف الارتباط عند الحاجة
-            val cookies = CookieManager.getInstance().getCookie(url)
-
-            if (!cookies.isNullOrEmpty()) {
-                request.addRequestHeader("Cookie", cookies)
-            }
-
-            request.setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_DOWNLOADS,
-                fileName
-            )
-
-            val manager = getSystemService(
-                Context.DOWNLOAD_SERVICE
-            ) as DownloadManager
-
+            val manager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             manager.enqueue(request)
-
-            Toast.makeText(
-                this,
-                "بدأ تنزيل الملف",
-                Toast.LENGTH_SHORT
-            ).show()
-
-        } catch (e: Exception) {
-
-            Toast.makeText(
-                this,
-                "تعذر تنزيل الملف: ${e.message}",
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, "بدأ تنزيل الملف", Toast.LENGTH_SHORT).show()
+        } catch (_: Exception) {
+            Toast.makeText(this, "تعذر تنزيل الملف", Toast.LENGTH_LONG).show()
         }
     }
 
-    // حفظ حالة الصفحة عند إعادة إنشاء النشاط
     override fun onSaveInstanceState(outState: Bundle) {
         webView.saveState(outState)
         super.onSaveInstanceState(outState)
     }
 
-    // زر الرجوع
-        // زر الرجوع
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (::webView.isInitialized && webView.canGoBack()) {
@@ -250,13 +169,21 @@ class MainActivity : Activity() {
         }
     }
 
-    // تحرير موارد WebView
+    override fun onPause() {
+        if (::webView.isInitialized) webView.onPause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::webView.isInitialized) webView.onResume()
+    }
+
     override fun onDestroy() {
         if (::webView.isInitialized) {
             webView.stopLoading()
             webView.destroy()
         }
-
         super.onDestroy()
     }
 }
