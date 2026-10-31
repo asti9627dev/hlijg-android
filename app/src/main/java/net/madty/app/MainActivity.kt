@@ -240,5 +240,24 @@ class MainActivity : Activity() {
     }
 
     // زر الرجوع
+    
+        // زر الرجوع
     @Deprecated("Deprecated in Java")
-    override
+    override fun onBackPressed() {
+        if (::webView.isInitialized && webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    // تحرير موارد WebView
+    override fun onDestroy() {
+        if (::webView.isInitialized) {
+            webView.stopLoading()
+            webView.destroy()
+        }
+
+        super.onDestroy()
+    }
+}
