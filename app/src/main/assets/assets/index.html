@@ -18,7 +18,7 @@
         .header::after { content:''; position:absolute; width:100px; height:100px; background:rgba(255,255,255,.08); border-radius:50%; bottom:10px; left:60px; }
         .header-title { text-align:right; z-index:1; }
         .header-title h1 { font-size:28px; font-weight:800; margin-bottom:2px; }
-        .header-title p { font-size:14px; opacity:.9; font-family:'Cairo',sans-serif; }
+        .header-title p { font-size:14px; opacity:.9; }
         .header-icons { display:flex; gap:15px; z-index:1; }
         .icon-btn { background:rgba(255,255,255,.15); width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; color:white; font-size:18px; border:0; cursor:pointer; }
         .container { padding:0 15px; margin-top:-25px; position:relative; z-index:2; }
@@ -44,8 +44,26 @@
         .tab-icon-img { width:32px; height:32px; border-radius:50%; object-fit:cover; background:#fff; border:1px solid #ddd; }
         .grades-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px 15px; margin-bottom:20px; }
         .grade-card { display:flex; flex-direction:column; cursor:pointer; text-decoration:none; }
-        .grade-img-box { width:100%; aspect-ratio:1.5/1; background:#fff; border:1px solid #dcdcdc; overflow:hidden; display:flex; justify-content:center; align-items:center; }
-        .grade-img-box img { width:100%; height:100%; object-fit:fill; }
+        .grade-img-box {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            overflow: hidden;
+            display: block;
+        }
+        .grade-img-box img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            object-position: center;
+        }
+        .grade-img-box.image-unavailable::after {
+            content: 'تعذر تحميل الصورة';
+            color: #999;
+            font-size: 13px;
+        }
         .grade-title { padding-top:10px; text-align:center; color:#444; font-size:15px; font-weight:700; }
         .alert-container { display:flex; align-items:center; justify-content:space-between; background:#b32020; color:white; padding:12px 15px; border-radius:12px; font-size:14px; font-weight:700; margin-bottom:20px; box-shadow:0 4px 15px rgba(179,32,32,.3); transition:opacity .3s; }
         .close-alert-btn { background:rgba(255,255,255,.2); border:0; color:white; width:30px; height:30px; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; font-size:14px; margin-right:10px; }
@@ -58,7 +76,7 @@
         .iframe-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
         .more-page-header { background:linear-gradient(to bottom,#0b5c38,#0D767C); color:white; padding:30px 20px 40px; border-radius:0 0 30px 30px; text-align:center; position:relative; }
         .logo-container { width:100px; height:100px; background:white; border-radius:50%; margin:0 auto 15px; display:flex; justify-content:center; align-items:center; box-shadow:0 4px 10px rgba(0,0,0,.1); overflow:hidden; padding:5px; }
-        .logo-container img { width:100%; height:100%; object-fit:contain; border-radius:50%; }
+        .logo-container img { width:100%; height:100%; object-fit:cover; object-position:center; border-radius:50%; }
         .more-page-header h2 { font-size:22px; font-weight:800; margin-bottom:5px; }
         .more-page-header p { font-size:14px; opacity:.8; }
         .menu-list { padding:20px 15px; margin-top:-20px; display:flex; flex-direction:column; gap:12px; }
@@ -249,33 +267,34 @@
         }
 
         const dataTerm1 = [
-            {name:"الصف الاول الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/اول-ابتدائي-الفصل-الدراسي-الاول.jpg",link:"https://www.madtiy.net/fd1/sf1/"},
-            {name:"الصف الثاني الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/ثاني-ابتدائي-الفصل-الدراسي-الاول.jpg",link:"https://www.madtiy.net/fd1/sf2/"},
+            {name:"الصف الاول الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/‪اول-ابتدائي-الفصل-الدراسي-الاول.jpg",link:"https://www.madtiy.net/fd1/sf1/"},
+            {name:"الصف الثاني الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/‪ثاني-ابتدائي-الفصل-الدراسي-الاول.jpg",link:"https://www.madtiy.net/fd1/sf2/"},
             {name:"الصف الثالث الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/12/ثالث-ابتدائي-الفصل-الدراسي-الاول.jpg",link:"https://www.madtiy.net/fd1/sf3/"},
-            {name:"الصف الرابع الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/رابع-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf4/"},
-            {name:"الصف الخامس الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/خامس-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf5/"},
-            {name:"الصف السادس الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/سادس-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf6/"},
+            {name:"الصف الرابع الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/‪‪‪رابع-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf4/"},
+            {name:"الصف الخامس الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/‪خامس-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf5/"},
+            {name:"الصف السادس الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/‪سادس-ابتدائي-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf6/"},
             {name:"الصف الاول المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/07/اول-متوسط-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf7/"},
-            {name:"الصف الثاني المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/07/ثاني-متوسط-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf8/"},
-            {name:"الصف الثالث المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/07/ثالث-متوسط-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf9/"},
+            {name:"الصف الثاني المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/07/‪‪ثاني-متوسط-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf8/"},
+            {name:"الصف الثالث المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/07/‪‪-ثالث-متوسط-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf9/"},
             {name:"الصف الاول الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/اول-ثانوي-مسارات-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/%d8%a7%d9%84%d8%b5%d9%81-%d8%a7%d9%84%d8%a7%d9%88%d9%84-%d8%a7%d9%84%d8%ab%d8%a7%d9%86%d9%88%d9%8a/"},
             {name:"الصف الثاني الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/ثاني-ثانوي-مسارات-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/%d8%a7%d9%84%d8%b5%d9%81-%d8%a7%d9%84%d8%ab%d8%a7%d9%86%d9%8a-%d8%a7%d9%84%d8%ab%d8%a7%d9%86%d9%88%d9%8a/"},
-            {name:"الصف الثالث الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/08/ثالث-ثانوي-مسارات-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf12/"}
+            {name:"الصف الثالث الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/08/‪ثالث-ثانوي-مسارات-الفصل-الدراسي-الاول-ف1.jpg",link:"https://www.madtiy.net/fd1/sf12/"},
         ];
 
+        const LRE = '\u202A'; // علامة اتجاه مخفية موجودة في أسماء ملفات الصور الأصلية
         const dataTerm2 = [
-            {name:"الصف الاول الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/اول-ابتدائي-الفصل-الدراسي-الثاني.jpg",link:"https://www.madtiy.net/fd2/sf01/"},
-            {name:"الصف الثاني الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/ثاني-ابتدائي-الفصل-الدراسي-الثاني.jpg",link:"https://www.madtiy.net/fd2/sf02/"},
-            {name:"الصف الثالث الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/12/ثالث-ابتدائي-الفصل-الدراسي-الثاني.jpg",link:"https://www.madtiy.net/fd2/sf03/"},
-            {name:"الصف الرابع الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/رابع-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf04/"},
-            {name:"الصف الخامس الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/خامس-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf05/"},
-            {name:"الصف السادس الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/سادس-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf06/"},
-            {name:"الصف الاول المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/11/اول-متوسط-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf07/"},
-            {name:"الصف الثاني المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/11/ثاني-متوسط-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf08/"},
-            {name:"الصف الثالث المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/11/ثالث-متوسط-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf09/"},
+            {name:"الصف الاول الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+LRE+"اول-ابتدائي-الفصل-الدراسي-الثاني.jpg",link:"https://www.madtiy.net/fd2/sf01/"},
+            {name:"الصف الثاني الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+LRE+"ثاني-ابتدائي-الفصل-الدراسي-الثاني.jpg",link:"https://www.madtiy.net/fd2/sf02/"},
+            {name:"الصف الثالث الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/12/"+LRE+"ثالث-ابتدائي-الفصل-الدراسي-الثاني.jpg",link:"https://www.madtiy.net/fd2/sf03/"},
+            {name:"الصف الرابع الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+LRE+LRE+LRE+"رابع-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf04/"},
+            {name:"الصف الخامس الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+LRE+"خامس-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf05/"},
+            {name:"الصف السادس الابتدائي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+LRE+"سادس-ابتدائي-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf06/"},
+            {name:"الصف الاول المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+"اول-متوسط-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf07/"},
+            {name:"الصف الثاني المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+LRE+LRE+"ثاني-متوسط-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf08/"},
+            {name:"الصف الثالث المتوسط",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+LRE+LRE+"-ثالث-متوسط-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf09/"},
             {name:"الصف الاول الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/اول-ثانوي-مسارات-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf010/"},
-            {name:"الصف الثاني الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/ثاني-ثانوي-مسارات-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf012/"},
-            {name:"الصف الثالث الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/ثالث-ثانوي-مسارات-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf011/"}
+            {name:"الصف الثاني الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/07/"+LRE+"ثاني-ثانوي-مسارات-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf012/"},
+            {name:"الصف الثالث الثانوي",img:"https://www.madtiy.net/wp-content/uploads/2023/11/"+LRE+LRE+"ثالث-ثانوي-مسارات-الفصل-الدراسي-الثاني-ف2.jpg",link:"https://www.madtiy.net/fd2/sf011/"},
         ];
 
         function renderGrades(data) {
@@ -290,7 +309,7 @@
                 img.src = grade.img;
                 img.alt = grade.name;
                 img.loading = 'lazy';
-                img.onerror = () => { img.src = 'https://via.placeholder.com/300x200?text=Grade'; };
+                img.onerror = () => { img.style.display = 'none'; box.classList.add('image-unavailable'); };
                 const box = document.createElement('div');
                 box.className = 'grade-img-box';
                 box.appendChild(img);
