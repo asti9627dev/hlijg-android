@@ -78,4 +78,653 @@ input,textarea,select{font-family:inherit}
 .more-item i:first-child{width:25px;text-align:center;color:var(--primary-color);font-size:18px}
 .more-item span{flex:1;font-size:14px}
 .more-item i:last-child{color:#bbb;font-size:13px}
-@media(max-width:360px
+@media(max-width:360px{
+.header-title h1{font-size:24px}
+.stat-card{padding:15px 5px}
+.stat-card h2{font-size:21px}
+}
+</style>
+
+<style>
+:root{--madtiy-motion:240ms;--madtiy-ease:cubic-bezier(.2,.75,.25,1)}
+.page-section.active{animation:madtiyPageEnter 280ms var(--madtiy-ease) both}
+@keyframes madtiyPageEnter{
+0%{opacity:0;transform:translate3d(0,9px,0)}
+100%{opacity:1;transform:translate3d(0,0,0)}
+}
+.bottom-nav{isolation:isolate}
+.nav-item{position:relative;overflow:hidden;transition:color 240ms ease,transform 240ms ease}
+.nav-item i{transition:transform 240ms ease}
+.nav-item.active i{transform:translateY(-2px)}
+.nav-item:active{transform:scale(.94)}
+.center-btn-wrapper{transition:transform 220ms ease}
+.center-btn-wrapper:active{transform:scale(.94)}
+</style>
+</head> <body>
+<div id="page-home" class="page-section active">
+<header class="header">
+<div class="header-title"><h1>مساء الخير</h1><p id="current-date"></p></div>
+<div class="header-icons">
+<button class="icon-btn" onclick="switchTab('page-more')"><i class="fa-solid fa-bars"></i></button>
+<button class="icon-btn" onclick="shareApp()" aria-label="مشاركة التطبيق"><i class="fa-solid fa-share-nodes"></i></button>
+</div>
+</header>
+
+<main class="container">
+<div class="stats-grid">
+<div class="stat-card" onclick="switchTab('page-tasks')"><div class="stat-icon icon-red"><i class="fa-solid fa-list-check"></i></div><h2 id="tasks-count-home">0</h2><p>مهامي</p></div>
+<div class="stat-card" onclick="switchTab('page-fav')"><div class="stat-icon icon-green"><i class="fa-regular fa-bookmark"></i></div><h2 id="fav-count-home">0</h2><p>محفوظاتي</p></div>
+<div class="stat-card" onclick="switchTab('page-alarms')"><div class="stat-icon icon-blue"><i class="fa-regular fa-clock"></i></div><h2>0</h2><p>منبهاتي</p></div>
+</div>
+
+<div class="banner" onclick="switchTab('page-tools')">
+<div class="banner-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+<div class="banner-text"><h3>أدواتي الدراسية</h3><p>مهام، ملاحظات، جدول، عداد اختبارات<br>ونسبة موزونة</p></div>
+<i class="fa-solid fa-chevron-left banner-arrow" aria-hidden="true"></i>
+</div>
+
+<div class="section-header">
+<div class="section-title">الفصول الدراسية</div>
+<div class="semester-badge"><i class="fa-solid fa-book-open"></i> 2 فصول</div>
+</div>
+
+<div class="tabs-container">
+<div class="tab-bg" id="tabBg"></div>
+<div class="tab active" onclick="switchSemester(1,this)">الفصل الأول<img src="https://www.madtiy.net/wp-content/uploads/2024/08/الفصل-الدراسي-الاول-مادتي.jpg" class="tab-icon-img"></div>
+<div class="tab" onclick="switchSemester(2,this)">الفصل الثاني<img src="https://www.madtiy.net/wp-content/uploads/2022/05/الفصل-الدراسي-الثاني.jpg" class="tab-icon-img"></div>
+</div>
+
+<div class="grades-wrapper"><div class="grades-grid" id="gradesGrid"></div></div>
+</main>
+</div>
+
+<div id="page-tools" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">أدواتي الدراسية</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-home')"></i></div>
+<div class="tools-banner">
+<div><h3>أدواتك الدراسية في مكان واحد</h3><p>خطط، ذاكر، وتابع تقدمك بسهولة</p></div>
+<i class="fa-solid fa-wand-magic-sparkles" style="font-size:35px;opacity:.5"></i>
+</div>
+<div class="tools-list">
+<div class="tool-item" onclick="switchTab('page-exams')"><div class="tool-item-right"><div class="tool-icon ic-red"><i class="fa-regular fa-calendar-check"></i></div><div class="tool-text"><h4>عداد الاختبارات</h4><p>تابع كم بقي على كل اختبار</p></div></div><i class="fa-solid fa-chevron-left tool-item-left"></i></div>
+<div class="tool-item" onclick="switchTab('page-tasks')"><div class="tool-item-right"><div class="tool-icon ic-blue"><i class="fa-solid fa-list-check"></i></div><div class="tool-text"><h4>مهامي</h4><p>خطط مهامك الدراسية ورتبها</p></div></div><i class="fa-solid fa-chevron-left tool-item-left"></i></div>
+<div class="tool-item" onclick="switchTab('page-notes')"><div class="tool-item-right"><div class="tool-icon ic-yellow"><i class="fa-regular fa-note-sticky"></i></div><div class="tool-text"><h4>ملاحظاتي</h4><p>دون ملخصاتك وأفكارك</p></div></div><i class="fa-solid fa-chevron-left tool-item-left"></i></div>
+<div class="tool-item" onclick="switchTab('page-calc')"><div class="tool-item-right"><div class="tool-icon ic-green"><i class="fa-solid fa-graduation-cap"></i></div><div class="tool-text"><h4>حاسبة النسبة الموزونة</h4><p>احسب نسبتك الموزونة بسهولة</p></div></div><i class="fa-solid fa-chevron-left tool-item-left"></i></div>
+<div class="tool-item" onclick="switchTab('page-schedule')"><div class="tool-item-right"><div class="tool-icon ic-gray"><i class="fa-solid fa-bars-staggered"></i></div><div class="tool-text"><h4>جدولي الأسبوعي</h4><p>نظم حصصك لكل يوم</p></div></div><i class="fa-solid fa-chevron-left tool-item-left"></i></div>
+</div>
+</div>
+
+<div id="page-tasks" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">مهامي</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-tools')"></i></div>
+<div class="tool-page-container">
+<div id="tasks-list-container" class="item-list"></div>
+<div id="tasks-empty" class="empty-tool-state"><div class="empty-tool-icon"><i class="fa-solid fa-list-check"></i></div><h2>لا توجد مهام</h2><p>أضف مهمة دراسية جديدة ورتب أولوياتك</p></div>
+<button class="add-btn" onclick="openAddModal('task')"><i class="fa-solid fa-plus"></i> مهمة جديدة</button>
+</div>
+</div>
+
+<div id="page-notes" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">ملاحظاتي</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-tools')"></i></div>
+<div class="tool-page-container">
+<div id="notes-list-container" class="item-list"></div>
+<div id="notes-empty" class="empty-tool-state"><div class="empty-tool-icon"><i class="fa-regular fa-note-sticky"></i></div><h2>لا توجد ملاحظات</h2><p>دون أفكارك وملخصات دروسك لتبقى دائمًا في متناولك</p></div>
+<button class="add-btn" onclick="openAddModal('note')"><i class="fa-solid fa-plus"></i> ملاحظة جديدة</button>
+</div>
+</div>
+
+<div id="page-exams" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">عداد الاختبارات</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-tools')"></i></div>
+<div class="tool-page-container">
+<div id="exams-list-container" class="item-list"></div>
+<div id="exams-empty" class="empty-tool-state"><div class="empty-tool-icon"><i class="fa-regular fa-calendar"></i></div><h2>لا توجد اختبارات مسجلة</h2><p>أضف موعد اختبارك القادم لمتابعة الوقت المتبقي</p></div>
+<button class="add-btn" onclick="openAddModal('exam')"><i class="fa-solid fa-plus"></i> إضافة اختبار</button>
+</div>
+</div>
+
+<div id="page-alarms" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">منبهاتي</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-home')"></i></div>
+<div class="empty-state"><div class="empty-icon-bg"><i class="fa-regular fa-clock"></i></div><h2>عفوًا!</h2><p>لا توجد منبهات حالياً، يمكنك إضافة منبهات المذاكرة قريباً.</p></div>
+</div>
+
+<div id="page-schedule" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">جدولي الأسبوعي</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-tools')"></i></div>
+<div class="days-filter">
+<button class="day-chip active" onclick="filterSchedule('all',this)">الكل</button>
+<button class="day-chip" onclick="filterSchedule('الأحد',this)">الأحد</button>
+<button class="day-chip" onclick="filterSchedule('الإثنين',this)">الإثنين</button>
+<button class="day-chip" onclick="filterSchedule('الثلاثاء',this)">الثلاثاء</button>
+<button class="day-chip" onclick="filterSchedule('الأربعاء',this)">الأربعاء</button>
+<button class="day-chip" onclick="filterSchedule('الخميس',this)">الخميس</button>
+</div>
+<div class="tool-page-container">
+<div id="schedule-list-container" class="item-list"></div>
+<div id="schedule-empty" class="empty-tool-state"><div class="empty-tool-icon"><i class="fa-solid fa-bars-staggered"></i></div><h2>لا توجد حصص</h2><p>أضف حصصك الدراسية لتنظيم أسبوعك</p></div>
+<button class="add-btn" onclick="openAddModal('schedule')"><i class="fa-solid fa-plus"></i> إضافة حصة</button>
+</div>
+</div>
+
+<div id="page-calc" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">حاسبة النسبة الموزونة</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-tools')"></i></div>
+<div class="calc-container">
+<div class="calc-header-card"><div class="calc-icon-bg"><i class="fa-solid fa-graduation-cap"></i></div><h2>حاسبة النسبة الموزونة</h2><p>اضبط الأوزان وأدخل درجاتك لتظهر النتيجة فوراً</p></div>
+<div class="weights-section">
+<strong><i class="fa-solid fa-sliders" style="color:#137B7F"></i> نسب الأوزان</strong>
+<div class="weight-preset-btns">
+<button class="weight-btn active" onclick="setWeights(30,30,40,this)">40 / 30 / 30</button>
+<button class="weight-btn" onclick="setWeights(50,50,0,this)">0 / 50 / 50</button>
+<button class="weight-btn" onclick="setWeights(40,30,30,this)">30 / 30 / 40</button>
+</div>
+<p style="font-size:12px;color:#777">الترتيب: الثانوية / القدرات / التحصيلي</p>
+<div class="slider-group"><div class="slider-labels"><span>وزن الثانوية</span><span class="slider-value" id="val-weight-high">30%</span></div><input type="range" id="weight-high" min="0" max="100" value="30" oninput="updateWeights()"></div>
+<div class="slider-group"><div class="slider-labels"><span>وزن القدرات</span><span class="slider-value" id="val-weight-qiyas">30%</span></div><input type="range" id="weight-qiyas" min="0" max="100" value="30" oninput="updateWeights()"></div>
+<div class="slider-group"><div class="slider-labels"><span>وزن التحصيلي</span><span class="slider-value" id="val-weight-tahsili">40%</span></div><input type="range" id="weight-tahsili" min="0" max="100" value="40" oninput="updateWeights()"></div>
+<div id="weights-total" style="background:#E6F4F4;color:#137B7F;padding:15px;border-radius:10px;text-align:center;font-weight:700;margin-top:15px">مجموع الأوزان: 100%</div>
+</div>
+<div class="grades-input-section">
+<h3><i class="fa-solid fa-pen-to-square" style="color:#137B7F"></i> الدرجات (من 100)</h3>
+<div class="grade-input-wrapper"><label for="grade-high">درجة الثانوية</label><input type="number" id="grade-high" min="0" max="100" placeholder="0" oninput="calculateResult()"></div>
+<div class="grade-input-wrapper"><label for="grade-qiyas">درجة القدرات</label><input type="number" id="grade-qiyas" min="0" max="100" placeholder="0" oninput="calculateResult()"></div>
+<div class="grade-input-wrapper"><label for="grade-tahsili">درجة التحصيلي</label><input type="number" id="grade-tahsili" min="0" max="100" placeholder="0" oninput="calculateResult()"></div>
+</div>
+<div class="result-section"><h3>النسبة الموزونة</h3><div class="result-value" id="final-result">0.00%</div></div>
+</div>
+</div>
+
+<div id="page-fav" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">المفضلة</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-home')"></i></div>
+<div class="tool-page-container">
+<div id="favorites-list" class="item-list"></div>
+<div id="favorites-empty" class="empty-tool-state"><div class="empty-tool-icon"><i class="fa-regular fa-bookmark"></i></div><h2>لا توجد صفحات محفوظة</h2><p>أضف الصفحات التي تحتاجها إلى المفضلة للوصول إليها بسهولة</p></div>
+</div>
+</div>
+
+<div id="page-downloads" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">التنزيلات</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-home')"></i></div>
+<div class="tool-page-container">
+<div id="downloads-list" class="item-list"></div>
+<div id="downloads-empty" class="empty-tool-state"><div class="empty-tool-icon"><i class="fa-solid fa-download"></i></div><h2>لا توجد تنزيلات</h2><p>ستظهر الملفات التي تقوم بتنزيلها هنا</p></div>
+</div>
+</div>
+
+<div id="page-more" class="page-section">
+<div class="sub-page-header"><h2 class="sub-page-title">المزيد</h2><i class="fa-solid fa-arrow-right back-icon" onclick="switchTab('page-home')"></i></div>
+<div class="more-list">
+<div class="more-item" onclick="switchTab('page-fav')"><i class="fa-regular fa-bookmark"></i><span>المفضلة</span><i class="fa-solid fa-chevron-left"></i></div>
+<div class="more-item" onclick="switchTab('page-downloads')"><i class="fa-solid fa-download"></i><span>التنزيلات</span><i class="fa-solid fa-chevron-left"></i></div>
+<div class="more-item" onclick="switchTab('page-tools')"><i class="fa-solid fa-wand-magic-sparkles"></i><span>أدواتي الدراسية</span><i class="fa-solid fa-chevron-left"></i></div>
+</div>
+</div> <!-- شريط التنقل السفلي -->
+<div class="bottom-nav">
+    <button class="nav-item" onclick="switchTab('page-more')">
+        <i class="fa-solid fa-bars"></i>
+        <span>المزيد</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('page-downloads')">
+        <i class="fa-solid fa-download"></i>
+        <span>التنزيلات</span>
+    </button>
+
+    <div class="center-btn-wrapper" onclick="switchTab('page-home')">
+        <div class="center-btn">
+            <span style="color:#137B7F;font-size:25px;font-weight:800">م</span>
+        </div>
+    </div>
+
+    <button class="nav-item" onclick="switchTab('page-fav')">
+        <i class="fa-regular fa-bookmark"></i>
+        <span>المفضلة</span>
+    </button>
+
+    <button class="nav-item" onclick="switchTab('page-alarms')">
+        <i class="fa-regular fa-clock"></i>
+        <span>المنبه</span>
+    </button>
+</div>
+
+<!-- نافذة إضافة العناصر -->
+<div class="modal-overlay" id="add-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modal-title">إضافة جديد</h3>
+            <button class="modal-close" onclick="closeAddModal()">×</button>
+        </div>
+
+        <input id="item-title" class="form-control" placeholder="العنوان">
+
+        <input id="item-subject" class="form-control" placeholder="المادة">
+
+        <textarea id="item-body" class="form-control"
+            placeholder="التفاصيل" rows="4"></textarea>
+
+        <input id="item-date" class="form-control" type="date">
+
+        <button class="primary-btn" style="width:100%"
+            onclick="saveNewItem()">حفظ</button>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<style>
+.sub-page-header{
+    background:var(--primary-color);
+    color:white;
+    padding:25px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-radius:0 0 22px 22px;
+}
+.sub-page-title{font-size:21px}
+.back-icon{font-size:20px;cursor:pointer}
+.tool-page-container{padding:15px}
+.tools-list{padding:15px}
+.tool-item{
+    background:white;
+    padding:16px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+.tool-item-right{display:flex;align-items:center;gap:12px}
+.tool-icon{
+    width:45px;height:45px;border-radius:13px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--primary-light);color:var(--primary-color);
+}
+.tool-text h4{font-size:14px;margin-bottom:5px}
+.tool-text p{font-size:12px;color:#888}
+.tool-item-left{color:#aaa}
+.empty-tool-state{text-align:center;padding:40px 15px;color:#999}
+.empty-tool-icon{
+    font-size:40px;color:var(--primary-color);margin-bottom:15px
+}
+.empty-tool-state h2{font-size:17px;color:#555;margin-bottom:8px}
+.empty-tool-state p{font-size:13px;line-height:1.8}
+.add-btn{
+    width:100%;padding:14px;border:0;border-radius:12px;
+    background:var(--primary-color);color:white;
+    font-size:15px;margin-top:15px
+}
+.item-list{background:white;border-radius:14px;padding:12px}
+.item-entry{
+    padding:14px 5px;border-bottom:1px solid #eee;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px
+}
+.item-entry:last-child{border-bottom:0}
+.item-entry h4{font-size:14px;margin-bottom:5px}
+.item-entry p{font-size:12px;color:#888}
+.item-entry button{
+    border:0;background:transparent;color:#d66;padding:8px
+}
+.days-filter,.tabs-container,.weight-preset-btns{
+    display:flex;gap:8px;overflow-x:auto;padding:12px
+}
+.day-chip,.tab,.weight-btn{
+    border:0;background:white;border-radius:10px;
+    padding:10px 14px;white-space:nowrap;color:#666
+}
+.day-chip.active,.tab.active,.weight-btn.active{
+    background:var(--primary-color);color:white
+}
+.calc-container{padding:15px}
+.calc-header-card,.weights-section,.grades-input-section,.result-section{
+    background:white;padding:18px;border-radius:15px;margin-bottom:15px
+}
+.calc-header-card{text-align:center}
+.calc-header-card h2{margin:10px 0}
+.calc-header-card p{font-size:13px;color:#888}
+.calc-icon-bg{font-size:35px;color:var(--primary-color)}
+.slider-group{margin-top:18px}
+.slider-labels{display:flex;justify-content:space-between;margin-bottom:8px}
+.slider-group input{width:100%;accent-color:var(--primary-color)}
+.grade-input-wrapper{margin-top:15px}
+.grade-input-wrapper label{display:block;margin-bottom:7px;font-size:13px} 
+
+.grade-input-wrapper input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:9px;
+}
+.result-section{text-align:center}
+.result-value{
+    font-size:32px;
+    color:var(--primary-color);
+    font-weight:800;
+    margin-top:12px;
+}
+</style>
+
+<script>
+function switchTab(pageId){
+    document.querySelectorAll('.page-section').forEach(page=>{
+        page.classList.remove('active');
+    });
+    const page=document.getElementById(pageId);
+    if(page)page.classList.add('active');
+    renderFavorites();
+    renderDownloads();
+    updateHomeStats();
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(message){
+    const toast=document.getElementById('toast');
+    toast.textContent=message;
+    toast.classList.add('show');
+    clearTimeout(window.toastTimer);
+    window.toastTimer=setTimeout(()=>{
+        toast.classList.remove('show');
+    },2500);
+}
+
+function getStored(key){
+    try{return JSON.parse(localStorage.getItem(key)||'[]')}
+    catch(e){return []}
+}
+
+function setStored(key,value){
+    localStorage.setItem(key,JSON.stringify(value));
+}
+
+function addFavorite(title,url){
+    const favorites=getStored('madtiy_favorites');
+    if(favorites.some(item=>item.url===url)){
+        showToast('الصفحة موجودة في المفضلة');
+        return;
+    }
+    favorites.push({title,url,date:new Date().toISOString()});
+    setStored('madtiy_favorites',favorites);
+    renderFavorites();
+    updateHomeStats();
+    showToast('تمت الإضافة إلى المفضلة');
+}
+
+function removeFavorite(url){
+    setStored('madtiy_favorites',
+        getStored('madtiy_favorites').filter(item=>item.url!==url));
+    renderFavorites();
+    updateHomeStats();
+    showToast('تم حذف الصفحة من المفضلة');
+}
+
+function renderFavorites(){
+    const list=document.getElementById('favorites-list');
+    const empty=document.getElementById('favorites-empty');
+    if(!list||!empty)return;
+    const favorites=getStored('madtiy_favorites');
+    list.innerHTML='';
+    empty.style.display=favorites.length?'none':'block';
+
+    favorites.forEach(item=>{
+        const row=document.createElement('div');
+        row.className='item-entry';
+        const info=document.createElement('div');
+        info.innerHTML='<h4></h4><p></p>';
+        info.querySelector('h4').textContent=item.title;
+        info.querySelector('p').textContent=item.url;
+        const remove=document.createElement('button');
+        remove.innerHTML='<i class="fa-solid fa-trash"></i>';
+        remove.onclick=()=>removeFavorite(item.url);
+        row.append(info,remove);
+        list.appendChild(row);
+    });
+}
+
+function renderDownloads(){
+    const list=document.getElementById('downloads-list');
+    const empty=document.getElementById('downloads-empty');
+    if(!list||!empty)return;
+    const downloads=getStored('madtiy_downloads');
+    list.innerHTML='';
+    empty.style.display=downloads.length?'none':'block';
+
+    downloads.forEach(item=>{
+        const row=document.createElement('div');
+        row.className='item-entry';
+        const info=document.createElement('div');
+        info.innerHTML='<h4></h4><p></p>';
+        info.querySelector('h4').textContent=item.name;
+        info.querySelector('p').textContent=item.status||'تم تسجيل التنزيل';
+        const remove=document.createElement('button');
+        remove.innerHTML='<i class="fa-solid fa-trash"></i>';
+        remove.onclick=()=>{
+            setStored('madtiy_downloads',
+                downloads.filter(x=>x.id!==item.id));
+            renderDownloads();
+        };
+        row.append(info,remove);
+        list.appendChild(row);
+    });
+}
+
+function startAndroidDownload(url,name){
+    if(window.MadtiyAndroid&&
+       typeof window.MadtiyAndroid.startDownload==='function'){
+        window.MadtiyAndroid.startDownload(url,name);
+    }else{
+        showToast('خدمة التنزيل تحتاج إلى ربط Android');
+    }
+}
+
+function updateHomeStats(){
+    const tasks=getStored('madtiy_tasks');
+    const favorites=getStored('madtiy_favorites');
+    const taskCount=document.getElementById('tasks-count-home');
+    const favCount=document.getElementById('fav-count-home');
+    if(taskCount)taskCount.textContent=tasks.length;
+    if(favCount)favCount.textContent=favorites.length;
+}
+
+let currentItemType='';
+
+function openAddModal(type){
+    currentItemType=type;
+    const titles={
+        task:'إضافة مهمة',
+        note:'إضافة ملاحظة',
+        exam:'إضافة اختبار',
+        schedule:'إضافة حصة'
+    };
+    document.getElementById('modal-title').textContent=
+        titles[type]||'إضافة جديد';
+    document.getElementById('item-title').value='';
+    document.getElementById('item-subject').value='';
+    document.getElementById('item-body').value='';
+    document.getElementById('item-date').value='';
+    document.getElementById('add-modal').classList.add('show');
+}
+
+function closeAddModal(){
+    document.getElementById('add-modal').classList.remove('show');
+}
+
+function saveNewItem(){
+    const title=document.getElementById('item-title').value.trim();
+    const subject=document.getElementById('item-subject').value.trim();
+    const body=document.getElementById('item-body').value.trim();
+    const date=document.getElementById('item-date').value;
+
+    if(!title){
+        showToast('اكتب العنوان أولاً');
+        return;
+    }
+
+    const keys={
+        task:'madtiy_tasks',
+        note:'madtiy_notes',
+        exam:'madtiy_exams',
+        schedule:'madtiy_schedule'
+    };
+    const key=keys[currentItemType];
+    if(!key)return;
+
+    const items=getStored(key);
+    items.push({
+        id:Date.now(),title,subject,body,date,
+        created:new Date().toISOString()
+    });
+    setStored(key,items);
+    closeAddModal();
+    renderStoredItems();
+    updateHomeStats();
+    showToast('تم الحفظ بنجاح');
+}
+
+function renderStoredItems(){
+    const config=[
+        ['madtiy_tasks','tasks-list-container','tasks-empty'],
+        ['madtiy_notes','notes-list-container','notes-empty'],
+        ['madtiy_exams','exams-list-container','exams-empty'],
+        ['madtiy_schedule','schedule-list-container','schedule-empty']
+    ];
+
+    config.forEach(([key,listId,emptyId])=>{
+        const list=document.getElementById(listId);
+        const empty=document.getElementById(emptyId);
+        if(!list||!empty)return;
+        const items=getStored(key);
+        list.innerHTML='';
+        empty.style.display=items.length?'none':'block';
+
+        items.forEach(item=>{
+            const row=document.createElement('div');
+            row.className='item-entry';
+            const info=document.createElement('div');
+            info.innerHTML='<h4></h4><p></p>';
+            info.querySelector('h4').textContent=item.title;
+            info.querySelector('p').textContent=
+                [item.subject,item.date].filter(Boolean).join(' • ');
+            const remove=document.createElement('button');
+            remove.innerHTML='<i class="fa-solid fa-trash"></i>';
+            remove.onclick=()=>{
+                setStored(key,items.filter(x=>x.id!==item.id));
+                renderStoredItems();
+                updateHomeStats();
+                showToast('تم الحذف');
+            };
+            row.append(info,remove);
+            list.appendChild(row);
+        });
+    });
+}
+
+function shareApp(){
+    const url='https://www.madtiy.net';
+    if(navigator.share){
+        navigator.share({
+            title:'تطبيق مادتي',
+            text:'اكتشف تطبيق مادتي التعليمي',
+            url:url
+        }).catch(()=>{});
+    }else if(navigator.clipboard){
+        navigator.clipboard.writeText(url);
+        showToast('تم نسخ الرابط');
+    }else{
+        showToast(url);
+    }
+}
+
+function openWebview(url){
+    if(window.MadtiyAndroid&&
+       typeof window.MadtiyAndroid.openWebview==='function'){
+        window.MadtiyAndroid.openWebview(url);
+    }else{
+        window.location.href=url;
+    }
+}
+
+function switchSemester(term,element){
+    document.querySelectorAll('.tabs-container .tab')
+        .forEach(tab=>tab.classList.remove('active'));
+    if(element)element.classList.add('active');
+    showToast('تم اختيار الفصل الدراسي '+term);
+}
+
+function filterSchedule(day,element){
+    document.querySelectorAll('.day-chip')
+        .forEach(chip=>chip.classList.remove('active'));
+    if(element)element.classList.add('active');
+}
+
+function setWeights(high,qiyas,tahsili,button){
+    document.getElementById('weight-high').value=high;
+    document.getElementById('weight-qiyas').value=qiyas;
+    document.getElementById('weight-tahsili').value=tahsili;
+    document.querySelectorAll('.weight-btn')
+        .forEach(btn=>btn.classList.remove('active'));
+    if(button)button.classList.add('active');
+    updateWeights();
+}
+
+function updateWeights(){
+    const high=+document.getElementById('weight-high').value;
+    const qiyas=+document.getElementById('weight-qiyas').value;
+    const tahsili=+document.getElementById('weight-tahsili').value;
+
+    document.getElementById('val-weight-high').textContent=high+'%';
+    document.getElementById('val-weight-qiyas').textContent=qiyas+'%';
+    document.getElementById('val-weight-tahsili').textContent=tahsili+'%';
+
+    const total=high+qiyas+tahsili;
+    document.getElementById('weights-total').textContent=
+        'مجموع الأوزان: '+total+'%';
+    calculateResult();
+}
+
+function calculateResult(){
+    const weights=[
+        +document.getElementById('weight-high').value,
+        +document.getElementById('weight-qiyas').value,
+        +document.getElementById('weight-tahsili').value
+    ];
+    const grades=[
+        document.getElementById('grade-high').value,
+        document.getElementById('grade-qiyas').value,
+        document.getElementById('grade-tahsili').value
+    ];
+    const result=document.getElementById('final-result');
+
+    if(weights.reduce((a,b)=>a+b,0)!==100){
+        result.textContent='--';
+        return;
+    }
+
+    let sum=0,used=0;
+    grades.forEach((value,index)=>{
+        if(value!==''){
+            const grade=Number(value);
+            if(grade>=0&&grade<=100){
+                sum+=grade*weights[index]/100;
+                used+=weights[index];
+            }
+        }
+    });
+    result.textContent=used?(sum*100/used).toFixed(2)+'%':'0.00%';
+}
+
+window.addEventListener('load',()=>{
+    renderFavorites();
+    renderDownloads();
+    renderStoredItems();
+    updateHomeStats();
+    updateWeights();
+
+    const date=document.getElementById('current-date');
+    if(date){
+        date.textContent=new Intl.DateTimeFormat('ar-SA',{
+            weekday:'long',
+            day:'numeric',
+            month:'long'
+        }).format(new Date());
+    }
+});
+</script>
+
+</body>
+</html>
